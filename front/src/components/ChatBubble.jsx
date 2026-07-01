@@ -7,7 +7,12 @@ export default function ChatBubble() {
   const toggleChat = () => setIsOpen(!isOpen);
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
+    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
+      <div className="rounded-full border border-gray-200 bg-white/90 px-3 py-2 text-sm font-medium text-text-dark shadow-md backdrop-blur">
+        Need help?
+      </div>
+
+      <div className="relative">
       {/* Chat Window */}
       {isOpen && (
         <div
@@ -57,7 +62,7 @@ export default function ChatBubble() {
               className="w-full bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center justify-center gap-2"
               aria-label="Contact a human agent"
             >
-              👤 Contact Human
+              👤 Contact Human assistant
             </button>
           </div>
         </div>
@@ -73,6 +78,7 @@ export default function ChatBubble() {
       >
         💬
       </Button>
+      </div>
     </div>
   );
 }

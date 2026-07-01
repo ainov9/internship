@@ -132,3 +132,5 @@ The component uses conditional rendering to display different pages:
 - **Authentication**: Basic state-based auth (no backend integration).
 - **Responsive Design**: Uses Tailwind CSS classes for mobile/desktop layouts.
 - **Animations**: `framer-motion` is used extensively for smooth transitions and hover effects.
+
+ 

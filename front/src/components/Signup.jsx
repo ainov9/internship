@@ -118,7 +118,7 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="you@example.com"
+                placeholder="you@gmail.com"
                 className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 required
                 aria-label="Email address"
@@ -202,7 +202,7 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
               Google
             </button>
             <button className="w-full px-4 py-2 border border-border rounded-lg hover:border-primary hover:bg-primary-light transition-colors font-medium text-sm">
-              GitHub
+              Facebook
             </button>
           </div>
 

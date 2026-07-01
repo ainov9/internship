@@ -6,12 +6,12 @@ import './App.css'
 function App() {
   // Main App component - Manages routing between pages (home, login, signup) and user authentication state
   const [currentPage, setCurrentPage] = useState('home'); // 'home', 'login', 'signup'
-  const [user, setUser] = useState(null); 
-  const [pendingScrollTarget, setPendingScrollTarget] = useState(null);
+  const [user, setUser] = useState(null);   // ona donner l'email dyal user li kay login wla kay signup
+  const [pendingScrollTarget, setPendingScrollTarget] = useState(null);// ona l'element li bghina nscrolliw lih ila kan l'page li kayn daba hiya home
 
   const scrollToSection = (sectionId) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+  }; // Function to scroll to a specific section by ID
 
   useEffect(() => {
     if (currentPage !== 'home' || !pendingScrollTarget) return;
@@ -19,7 +19,7 @@ function App() {
     requestAnimationFrame(() => {
       scrollToSection(pendingScrollTarget);
       setPendingScrollTarget(null);
-    });
+    });// Use requestAnimationFrame to ensure smooth scrolling after the page has rendered
   }, [currentPage, pendingScrollTarget]);
 
   const handleNavClick = (href) => {
@@ -29,14 +29,14 @@ function App() {
       setPendingScrollTarget(sectionId);
       setCurrentPage('home');
       return;
-    }
+    }//le remplacement de # par rien pour obtenir l'id de la section
 
-    scrollToSection(sectionId);
+    scrollToSection(sectionId);// Scroll to the section if already on the home page
   };
 
   const scrollToChat = () => {
-    scrollToSection('start-chat');
-  }
+    scrollToSection('Bubble');
+  };
 
   const handleLoginSuccess = (email) => {
 // Called after successful login: stores user email in state and redirects to home page
@@ -57,43 +57,6 @@ function App() {
     setCurrentPage('home');
   };
 
-  // Show Login page
-  if (currentPage === 'login') {
-    return (
-      <>
-        <Navbar 
-          onNavClick={handleNavClick}
-          onLoginClick={() => setCurrentPage('login')}
-          onSignupClick={() => setCurrentPage('signup')}
-        />
-        <Login 
-          onSwitchToSignup={() => setCurrentPage('signup')}
-          onLoginSuccess={handleLoginSuccess}
-        />
-        <Footer />
-      </>
-    );
-  }
-
-  // Show Signup page
-  if (currentPage === 'signup') {
-    return (
-      <>
-        <Navbar 
-          onNavClick={handleNavClick}
-          onLoginClick={() => setCurrentPage('login')}
-          onSignupClick={() => setCurrentPage('signup')}
-        />
-        <Signup 
-          onSwitchToLogin={() => setCurrentPage('login')}
-          onSignupSuccess={handleSignupSuccess}
-        />
-        <Footer />
-      </>
-    );
-  }
-
-  // Show Home page
   const features = [
     {
       title: 'Smart Conversations',
@@ -113,7 +76,7 @@ function App() {
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="app-shell min-h-screen bg-white">
       {/* Navigation */}
       <Navbar 
         onNavClick={handleNavClick}
@@ -121,10 +84,26 @@ function App() {
         onSignupClick={() => setCurrentPage('signup')}
       />
 
+      {currentPage === 'login' && (
+        <Login
+          onSwitchToSignup={() => setCurrentPage('signup')}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}
+
+      {currentPage === 'signup' && (
+        <Signup
+          onSwitchToLogin={() => setCurrentPage('login')}
+          onSignupSuccess={handleSignupSuccess}
+        />
+      )}
+
+      {currentPage === 'home' && (
+        <>
       {/* Hero Section */}
       <section
         id="home"
-        className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-light via-white to-gray-50"
+        className="flex min-h-screen scroll-mt-20 items-center justify-center bg-gradient-to-br from-primary-light via-white to-gray-50"
       >
         <Hero
           title="Welcome to our  ChatBot"
@@ -136,14 +115,14 @@ function App() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-gray-50">
+      <section id="features" className="scroll-mt-20 py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <motion.h2
               className="text-4xl md:text-5xl font-bold text-text-dark mb-4"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 2, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 1.6 }}
               viewport={{ once: true, amount: 0.3 }}
             >
               Why Choose Us?
@@ -152,7 +131,7 @@ function App() {
               className="text-xl text-text-muted max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 1.6, delay: 0.2 }}
               viewport={{ once: true, amount: 0.3 }}
             >
               Discover the features that make our chatbot the perfect solution for your needs.
@@ -197,7 +176,7 @@ function App() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 bg-white">
+      <section id="about" className="scroll-mt-20 py-20 bg-white">
         <motion.div
           className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0 }}
@@ -207,9 +186,9 @@ function App() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -35 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
+              transition={{ duration: 0.99, delay: 0.2 }}
               viewport={{ once: true, amount: 0.3 }}
             >
               <h2 className="text-4xl font-bold text-text-dark mb-6">
@@ -250,7 +229,7 @@ function App() {
       </section>
 
       {/* CTA Section */}
-      <section id="start-chat" className="py-20 bg-gradient-to-r from-primary to-purple-600">
+      <section id="start-chat" className="scroll-mt-20 py-20 bg-gradient-to-r from-primary to-purple-600">
         <motion.div
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
           initial={{ opacity: 0, y: 30 }}
@@ -308,7 +287,7 @@ function App() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-white">
+      <section id="contact" className="scroll-mt-20 py-20 bg-white">
         <motion.div
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0, y: 30 }}
@@ -397,9 +376,13 @@ function App() {
           </motion.form>
         </motion.div>
       </section>
+        </>
+      )}
 
       {/* Floating Chat Bubble */}
-      <ChatBubble />
+      <div id="Bubble">
+        <ChatBubble />
+      </div>
 
       {/* Footer */}
       <Footer />
