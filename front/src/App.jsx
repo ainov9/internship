@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Navbar, Hero, Card, Button, Footer, ChatBubble, Login, Signup } from './components'
+import { Navbar, Hero, Card, Button, Footer, ChatBubble, Login, Signup, Dashboard } from './components'
 import './App.css'
 
 function App() {
@@ -8,6 +8,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home'); // 'home', 'login', 'signup'
   const [user, setUser] = useState(null);   // ona donner l'email dyal user li kay login wla kay signup
   const [pendingScrollTarget, setPendingScrollTarget] = useState(null);// ona l'element li bghina nscrolliw lih ila kan l'page li kayn daba hiya home
+  const [isAdminView, setIsAdminView] = useState(false);
 
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
@@ -36,6 +37,10 @@ function App() {
 
   const scrollToChat = () => {
     scrollToSection('Bubble');
+  };
+
+  const handleAdminEnter = () => {
+    setIsAdminView(true);
   };
 
   const handleLoginSuccess = (email) => {
@@ -75,6 +80,10 @@ function App() {
     },
   ]
 
+  if (isAdminView) {
+    return <Dashboard />;
+  }
+
   return (
     <div className="app-shell min-h-screen bg-white">
       {/* Navigation */}
@@ -110,6 +119,7 @@ function App() {
           subtitle="Your intelligent conversational AI partner. Chat smarter, not harder."
           ctaText="Start Chatting"
           onCtaClick={scrollToChat}
+          onAdminClick={handleAdminEnter}
           onLoginClick={() => setCurrentPage('login')}
         />
       </section>

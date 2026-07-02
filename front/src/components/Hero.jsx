@@ -2,7 +2,7 @@ import Button from './Button';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
-export default function Hero({ title, subtitle, ctaText, onCtaClick, backgroundImage }) {
+export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClick, backgroundImage }) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -128,6 +128,16 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, backgroundI
               Learn More
             </Button>
           </motion.div>
+          <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={onAdminClick}
+              className="shadow-lg"
+            >
+              Enter as Admin
+            </Button>
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>
@@ -139,5 +149,6 @@ Hero.propTypes = {
   subtitle: PropTypes.string.isRequired,
   ctaText: PropTypes.string.isRequired,
   onCtaClick: PropTypes.func.isRequired,
+  onAdminClick: PropTypes.func,
   backgroundImage: PropTypes.string,
 };
