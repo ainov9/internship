@@ -85,7 +85,7 @@ function App() {
   }
 
   return (
-    <div className="app-shell min-h-screen bg-white">
+    <div className="app-shell min-h-screen bg-transparent">
       {/* Navigation */}
       <Navbar 
         onNavClick={handleNavClick}
@@ -108,11 +108,11 @@ function App() {
       )}
 
       {currentPage === 'home' && (
-        <>
+        <div className="home-page-background">
       {/* Hero Section */}
       <section
         id="home"
-        className="flex min-h-screen scroll-mt-20 items-center justify-center bg-gradient-to-br from-primary-light via-white to-gray-50"
+        className="flex min-h-screen scroll-mt-20 items-center justify-center bg-transparent"
       >
         <Hero
           title="Welcome to our  ChatBot"
@@ -125,7 +125,7 @@ function App() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="scroll-mt-20 py-20 bg-gray-50">
+      <section id="features" className="scroll-mt-20 py-20 bg-white/55 backdrop-blur-[1px]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <motion.h2
@@ -186,7 +186,7 @@ function App() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="scroll-mt-20 py-20 bg-white">
+      <section id="about" className="scroll-mt-20 py-20 bg-white/35 backdrop-blur-[1px]">
         <motion.div
           className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0 }}
@@ -297,7 +297,7 @@ function App() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="scroll-mt-20 py-20 bg-white">
+      <section id="contact" className="scroll-mt-20 py-20 bg-white/45 backdrop-blur-[1px]">
         <motion.div
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0, y: 30 }}
@@ -386,7 +386,7 @@ function App() {
           </motion.form>
         </motion.div>
       </section>
-        </>
+        </div>
       )}
 
       {/* Floating Chat Bubble */}

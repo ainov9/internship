@@ -24,7 +24,9 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
           {/* Logo */}
           <div className="flex-shrink-0">
             <span className="text-3xl font-bold text-primary animate-pulse">
-              Chat🤖
+           <pre>
+            NEXTAITEK ֎
+           </pre>
             </span>
           </div>
 
