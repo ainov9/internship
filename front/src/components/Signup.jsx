@@ -11,6 +11,7 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [welcomeMessage, setWelcomeMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +46,8 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
     }
 
     setLoading(true);
+    setWelcomeMessage(`Bienvenue ${formData.firstName}! Création du compte en cours...`);
+
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
@@ -68,6 +71,13 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-red-700 text-sm">{error}</p>
+            </div>
+          )}
+
+          {/* Welcome Message */}
+          {welcomeMessage && !error && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-700 text-sm">{welcomeMessage}</p>
             </div>
           )}
 

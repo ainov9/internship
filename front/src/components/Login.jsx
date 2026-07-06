@@ -6,10 +6,12 @@ export default function Login({ onSwitchToSignup, onLoginSuccess }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [welcomeMessage, setWelcomeMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+    setWelcomeMessage('');
 
     if (!email || !password) {
       setError('Please fill in all fields');
@@ -22,6 +24,8 @@ export default function Login({ onSwitchToSignup, onLoginSuccess }) {
     }
 
     setLoading(true);
+    setWelcomeMessage(`Bienvenue ${email.split('@')[0]} ! Connexion en cours...`);
+
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
@@ -45,6 +49,13 @@ export default function Login({ onSwitchToSignup, onLoginSuccess }) {
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-red-700 text-sm">{error}</p>
+            </div>
+          )}
+
+          {/* Welcome Message */}
+          {welcomeMessage && !error && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-700 text-sm">{welcomeMessage}</p>
             </div>
           )}
 
