@@ -42,8 +42,14 @@ const sampleFaqs = [
 ];
 
 function Dashboard() {
-  const [activeItem, setActiveItem] = useState('FAQ Management');
+  const [activeItem, setActiveItem] = useState('Assistant Manager');
   const [faqs, setFaqs] = useState(sampleFaqs);
+  const [assistants, setAssistants] = useState([
+    { id: 'assistant-1', name: 'Support Assistant', purpose: 'Answer customer questions with knowledge base context', createdAt: 'Today' },
+  ]);
+  const [assistantName, setAssistantName] = useState('');
+  const [assistantPurpose, setAssistantPurpose] = useState('Help customers with frequently asked questions');
+  const [assistantMessage, setAssistantMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [lastSavedMessage, setLastSavedMessage] = useState('');
@@ -54,6 +60,28 @@ function Dashboard() {
     if (!query) return faqs;
     return faqs.filter((item) => `${item.question} ${item.answer}`.toLowerCase().includes(query));
   }, [searchTerm, faqs]);
+
+  const handleCreateAssistant = (event) => {
+    event.preventDefault();
+    setAssistantMessage('');
+
+    if (!assistantName.trim()) {
+      setAssistantMessage('Please enter a name for the assistant.');
+      return;
+    }
+
+    const newAssistant = {
+      id: `assistant-${Date.now()}`,
+      name: assistantName.trim(),
+      purpose: assistantPurpose.trim() || 'Support customers with FAQs and conversation flow',
+      createdAt: new Date().toLocaleDateString(),
+    };
+
+    setAssistants((current) => [newAssistant, ...current]);
+    setAssistantName('');
+    setAssistantPurpose('Help customers with frequently asked questions');
+    setAssistantMessage(`Assistant “${newAssistant.name}” created successfully.`);
+  };
 
   const handleAnswerSave = (answer) => {
     if (!selectedFaq) return;
@@ -121,43 +149,121 @@ function Dashboard() {
               <StatCard label="Avg Response Time" value="1.4s" icon="⚡" trend="-0.3s" trendDirection="down" />
             </motion.div>
 
-            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-slate-900">FAQ Management</h2>
-                  <p className="mt-1 text-sm text-slate-500">{faqs.length} entries in the knowledge base</p>
+            {activeItem === 'Assistant Manager' && (
+              <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-slate-900">Assistant Manager</h2>
+                    <p className="mt-1 text-sm text-slate-500">Create assistants and manage their purpose.</p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 shadow-sm">
+                    <p className="font-semibold text-slate-900">Admin only</p>
+                    <p>Assistants cannot upload datasets from the home section.</p>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <label className="flex items-center rounded-2xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-600 focus-within:ring-2 focus-within:ring-sky-500">
-                    <span className="mr-2">🔎</span>
-                    <input
-                      value={searchTerm}
-                      onChange={(event) => setSearchTerm(event.target.value)}
-                      placeholder="Search FAQ"
-                      className="w-full bg-transparent outline-none"
-                      aria-label="Search FAQ entries"
-                    />
-                  </label>
-                  <button
-                    type="button"
-                    className="rounded-2xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
-                    onClick={() => setSelectedFaq({ id: 'new', question: '', answer: '', category: 'General', status: 'Unanswered' })}
-                  >
-                    Add Question
-                  </button>
+
+                <div className="mt-6 grid gap-6 lg:grid-cols-2">
+                  <div className="space-y-4 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                    <h3 className="text-base font-semibold text-slate-900">New Assistant</h3>
+                    <label className="block text-sm text-slate-700">
+                      Name
+                      <input
+                        type="text"
+                        value={assistantName}
+                        onChange={(event) => setAssistantName(event.target.value)}
+                        placeholder="Support Assistant"
+                        className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                      />
+                    </label>
+                    <label className="block text-sm text-slate-700">
+                      Purpose
+                      <textarea
+                        value={assistantPurpose}
+                        onChange={(event) => setAssistantPurpose(event.target.value)}
+                        rows={4}
+                        className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-3 py-2 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleCreateAssistant}
+                      className="w-full rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    >
+                      Create Assistant
+                    </button>
+                    {assistantMessage && (
+                      <p className="text-sm text-slate-600">{assistantMessage}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-4 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                    <h3 className="text-base font-semibold text-slate-900">Existing Assistants</h3>
+                    <div className="space-y-3">
+                      {assistants.map((assistant) => (
+                        <div key={assistant.id} className="rounded-3xl border border-slate-200 bg-white p-4">
+                          <div className="flex items-center justify-between gap-4">
+                            <div>
+                              <p className="font-semibold text-slate-900">{assistant.name}</p>
+                              <p className="text-sm text-slate-500">Created: {assistant.createdAt}</p>
+                            </div>
+                          </div>
+                          <p className="mt-3 text-sm text-slate-600">{assistant.purpose}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </section>
+            )}
 
-              <div className="mt-6">
-                <FaqTable items={filteredFaqs} onAnswerClick={setSelectedFaq} />
-              </div>
-            </section>
+            {activeItem === 'FAQ Management' && (
+              <>
+                <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold text-slate-900">FAQ Management</h2>
+                      <p className="mt-1 text-sm text-slate-500">{faqs.length} entries in the knowledge base</p>
+                    </div>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <label className="flex items-center rounded-2xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-600 focus-within:ring-2 focus-within:ring-sky-500">
+                        <span className="mr-2">🔎</span>
+                        <input
+                          value={searchTerm}
+                          onChange={(event) => setSearchTerm(event.target.value)}
+                          placeholder="Search FAQ"
+                          className="w-full bg-transparent outline-none"
+                          aria-label="Search FAQ entries"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        className="rounded-2xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                        onClick={() => setSelectedFaq({ id: 'new', question: '', answer: '', category: 'General', status: 'Unanswered' })}
+                      >
+                        Add Question
+                      </button>
+                    </div>
+                  </div>
 
-            <DataImportPanel onImport={handleImport} />
+                  <div className="mt-6">
+                    <FaqTable items={filteredFaqs} onAnswerClick={setSelectedFaq} />
+                  </div>
+                </section>
 
-            <div aria-live="polite" className="text-sm text-slate-500">
-              {lastSavedMessage || 'Use sample data or import a file to populate the dashboard.'}
-            </div>
+                <DataImportPanel onImport={handleImport} />
+
+                <div aria-live="polite" className="text-sm text-slate-500">
+                  {lastSavedMessage || 'Use sample data or import a file to populate the dashboard.'}
+                </div>
+              </>
+            )}
+
+            {activeItem !== 'FAQ Management' && activeItem !== 'Assistant Manager' && (
+              <section className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm sm:p-6">
+                <h2 className="text-xl font-semibold text-slate-900">{activeItem}</h2>
+                <p className="mt-3 text-sm text-slate-500">This section is under construction. Please use Assistant Manager or FAQ Management for now.</p>
+              </section>
+            )}
           </div>
         </main>
       </div>

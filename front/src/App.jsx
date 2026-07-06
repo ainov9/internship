@@ -119,6 +119,7 @@ function App() {
           subtitle="Your intelligent conversational AI partner. Chat smarter, not harder."
           ctaText="Start Chatting"
           onCtaClick={scrollToChat}
+          onCreateAssistant={handleAdminEnter}
           onAdminClick={handleAdminEnter}
           onLoginClick={() => setCurrentPage('login')}
         />
