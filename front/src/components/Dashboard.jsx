@@ -9,7 +9,7 @@ import DataImportPanel from './DataImportPanel';
 
 
 
-
+//  exemple data for FAQs to demonstrate the dashboard functionality
 const sampleFaqs = [
   {
     id: 1,
@@ -40,9 +40,10 @@ const sampleFaqs = [
     status: 'Unanswered',
   },
 ];
-
+//partie logique li katdir l'interface dyal dashboard li kayn f admin
+// Dashboard component for managing assistants and FAQs
 function Dashboard() {
-  const [activeItem, setActiveItem] = useState('Assistant Manager');
+  const [activeItem, setActiveItem] = useState('Assistant Manager');//3ndna hna l'item li kayn f sidebar li kayn f dashboard okygol lik role
   const [faqs, setFaqs] = useState(sampleFaqs);
   const [assistants, setAssistants] = useState([
     { id: 'assistant-1', name: 'Support Assistant', purpose: 'Answer customer questions with knowledge base context', createdAt: 'Today' },
@@ -55,10 +56,36 @@ function Dashboard() {
   const [lastSavedMessage, setLastSavedMessage] = useState('');
   const prefersReducedMotion = useReducedMotion();
 
+  const answeredFaqCount = useMemo(
+    () => faqs.filter((item) => item.status === 'Answered').length,
+    [faqs],
+  );
+
+
+  const unansweredFaqCount = useMemo(
+    () => faqs.filter((item) => item.status === 'Unanswered').length,
+    [faqs],
+  );
+  const totalFaqCount = useMemo(() => faqs.length, [faqs]);
+
+
+
+  
+
+
+
+
+
+
   const filteredFaqs = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     if (!query) return faqs;
-    return faqs.filter((item) => `${item.question} ${item.answer}`.toLowerCase().includes(query));
+    else{
+      return faqs.filter((item) => `${item.question} ${item.answer}`.toLowerCase().includes(query));
+      let i = 0;
+      let sommequery = i+1;
+      console.log("sommequery", sommequery);
+    }
   }, [searchTerm, faqs]);
 
   const handleCreateAssistant = (event) => {
@@ -72,7 +99,7 @@ function Dashboard() {
 
     const newAssistant = {
       id: `assistant-${Date.now()}`,
-      name: assistantName.trim(),
+      name: assistantName.trim().toUpperCase(),
       purpose: assistantPurpose.trim() || 'Support customers with FAQs and conversation flow',
       createdAt: new Date().toLocaleDateString(),
     };
@@ -143,10 +170,11 @@ function Dashboard() {
               transition={{ duration: 0.3 }}
               className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
             >
+              <StatCard label="Answered FAQs" value={`${answeredFaqCount}`} icon="✅" trend="+12.4%" trendDirection="up" />
               <StatCard label="Total Users" value="12.8k" icon="👥" trend="+8.2%" trendDirection="up" />
-              <StatCard label="Queries Handled" value="4.2k" icon="💬" trend="+12.4%" trendDirection="up" />
-              <StatCard label="Success Rate" value="94.6%" icon="✅" trend="-1.1%" trendDirection="down" />
+              <StatCard label="Queries Handled" value={`${totalFaqCount}`} icon="💬" trend="+12.4%" trendDirection="up" />
               <StatCard label="Avg Response Time" value="1.4s" icon="⚡" trend="-0.3s" trendDirection="down" />
+              <StatCard label="Unanswered FAQs" value={`${unansweredFaqCount}`} icon="❌" trend="-5.1%" trendDirection="down" />
             </motion.div>
 
             {activeItem === 'Assistant Manager' && (

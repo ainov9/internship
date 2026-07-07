@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const navItems = ['Dashboard', 'FAQ Management', 'Users', 'Analytics'];
+const navItems = ['Assistant Manager', 'FAQ Management', 'Users', 'Analytics'];
 // Sidebar component for navigation
 function Sidebar({ activeItem, onNavigate }) {
   return (
