@@ -23,7 +23,7 @@ export default function ChatBubble() {
         >
           {/* Chat Header */}
           <div className="bg-gradient-to-r from-primary to-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
-            <h3 className="font-semibold">Chat with Us</h3>
+            <h3 className="font-semibold"> 💬Chat with Us</h3>
             <button
               onClick={toggleChat}
               className="text-white hover:bg-white hover:bg-opacity-20 p-1 rounded transition-colors"

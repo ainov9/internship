@@ -28,7 +28,7 @@ function detectType(fileName, mimeType = '') {
 
   return null;
 }
-
+// Function transform csv to json .
 function parseCsvText(text) {
   const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
   return {
@@ -36,6 +36,7 @@ function parseCsvText(text) {
     fields: parsed.meta.fields || [],
   };
 }
+// from exel to json 
 
 async function parseExcelFile(file) {
   const buffer = await file.arrayBuffer();//le transforme en binaire
