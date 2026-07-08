@@ -81,7 +81,7 @@ function App() {
   ]
 
   if (isAdminView) {
-    return <Dashboard />;
+    return <Dashboard isAdmin />;
   }
 
   return (

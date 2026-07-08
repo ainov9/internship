@@ -70,7 +70,7 @@ const sampleQueries = [
 ];
 //partie logique li katdir l'interface dyal dashboard li kayn f admin
 // Dashboard component for managing assistants and FAQs
-function Dashboard() {
+function Dashboard({ isAdmin = false }) {
   const [activeItem, setActiveItem] = useState('Assistant Manager');//3ndna hna l'item li kayn f sidebar li kayn f dashboard okygol lik role
   const [faqs, setFaqs] = useState(sampleFaqs);
   const [assistants, setAssistants] = useState([
@@ -393,7 +393,7 @@ const filteredFaqs = useMemo(() => {
                   </div>
                 </section>
 
-                <DataImportPanel onImport={handleImport} />
+                {isAdmin && <DataImportPanel onImport={handleImport} />}
 
                 <div aria-live="polite" className="text-sm text-slate-500">
                   {lastSavedMessage || 'Use sample data or import a file to populate the dashboard.'}
