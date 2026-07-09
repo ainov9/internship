@@ -71,7 +71,7 @@ const sampleQueries = [
 //partie logique li katdir l'interface dyal dashboard li kayn f admin
 // Dashboard component for managing assistants and FAQs
 function Dashboard({ isAdmin = false }) {
-  const [activeItem, setActiveItem] = useState('Assistant Manager');//3ndna hna l'item li kayn f sidebar li kayn f dashboard okygol lik role
+  const [activeItem, setActiveItem] = useState('FAQ Management');
   const [faqs, setFaqs] = useState(sampleFaqs);
   const [assistants, setAssistants] = useState([
     { id: 'assistant-1', name: 'Support Assistant', purpose: 'Answer customer questions with knowledge base context', createdAt: 'Today' },
@@ -393,7 +393,56 @@ const filteredFaqs = useMemo(() => {
                   </div>
                 </section>
 
-                {isAdmin && <DataImportPanel onImport={handleImport} />}
+                <div className="grid gap-6 xl:grid-cols-[1fr_420px]">
+                  <div>
+                    <div className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-slate-900">Import datasets</h3>
+                          <p className="mt-1 text-sm text-slate-500">Upload CSV, Excel, PDF, JSON, TXT or SQL files to add FAQ content.</p>
+                        </div>
+                      </div>
+
+                      {isAdmin && <div className="mt-4"><DataImportPanel onImport={handleImport} /></div>}
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                      <h3 className="text-lg font-semibold text-slate-900">Query Metrics</h3>
+                      <p className="mt-1 text-sm text-slate-500">Overview of chatbot handling performance.</p>
+                      <div className="mt-6 h-64">
+                        <Doughnut data={queryChartData} options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          plugins: { legend: { position: 'bottom' }, tooltip: { enabled: true } },
+                        }} />
+                      </div>
+                      <div className="mt-6 h-64">
+                        <Bar data={queriesPerMonthData} options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          plugins: { legend: { position: 'bottom' } },
+                          scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } },
+                        }} />
+                      </div>
+                    </section>
+
+                    <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                      <h3 className="text-lg font-semibold text-slate-900">FAQ Summary</h3>
+                      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                          <p className="text-sm text-slate-600">Answered</p>
+                          <p className="mt-2 text-3xl font-semibold text-slate-900">{answeredFaqCount}</p>
+                        </div>
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                          <p className="text-sm text-slate-600">Unanswered</p>
+                          <p className="mt-2 text-3xl font-semibold text-slate-900">{unansweredFaqCount}</p>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </div>
 
                 <div aria-live="polite" className="text-sm text-slate-500">
                   {lastSavedMessage || 'Use sample data or import a file to populate the dashboard.'}
