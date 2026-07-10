@@ -460,6 +460,55 @@ const filteredFaqs = useMemo(() => {
         </main>
       </div>
 
+      <section className="mt-8 rounded-[30px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <div>
+            <h2 className="text-3xl font-semibold text-slate-900">Create a new assistant</h2>
+            <p className="mt-3 text-sm text-slate-500">
+              Build a dedicated support assistant for your FAQ flow. Define the name and purpose, then save it to manage your team’s responses.
+            </p>
+          </div>
+
+          <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-6 shadow-sm">
+            <div className="space-y-4">
+              <label className="block text-sm font-medium text-slate-700">
+                Assistant name
+                <input
+                  type="text"
+                  value={assistantName}
+                  onChange={(event) => setAssistantName(event.target.value)}
+                  placeholder="Support Assistant"
+                  className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                />
+              </label>
+
+              <label className="block text-sm font-medium text-slate-700">
+                Purpose
+                <textarea
+                  value={assistantPurpose}
+                  onChange={(event) => setAssistantPurpose(event.target.value)}
+                  rows={4}
+                  placeholder="Help customers with FAQs, troubleshooting, and product guidance."
+                  className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 resize-none"
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={handleCreateAssistant}
+                className="w-full rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-700"
+              >
+                Create Assistant
+              </button>
+
+              {assistantMessage && (
+                <p className="text-sm text-slate-600">{assistantMessage}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <AnswerModal
         isOpen={Boolean(selectedFaq)}
         initialValue={selectedFaq?.answer || ''}

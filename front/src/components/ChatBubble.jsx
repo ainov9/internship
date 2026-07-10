@@ -4,10 +4,54 @@ import Button from './Button';
 export default function ChatBubble() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
+  const [voicerecording, setVoiceRecording] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState([
     { id: 'bot-1', from: 'bot', text: '👋 Hello! How can we help you today?' },
   ]);
   const messagesRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const recordedChunksRef = useRef([]);
+  const [isRecording, setIsRecording] = useState(false);
+
+const handleInputChange = (e) => {
+    setInput(e.target.value);
+    
+  }
+
+
+  const toggleRecording = async () => {
+    if (isRecording) {
+      try { mediaRecorderRef.current?.stop(); } catch (e) { /* ignore */ }
+      setIsRecording(false);
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recordedChunksRef.current = [];
+      const mr = new MediaRecorder(stream);
+      mediaRecorderRef.current = mr;
+
+      mr.addEventListener('dataavailable', (ev) => {
+        if (ev.data && ev.data.size) recordedChunksRef.current.push(ev.data);
+      });
+
+      mr.addEventListener('stop', () => {
+        const blob = new Blob(recordedChunksRef.current, { type: recordedChunksRef.current[0]?.type || 'audio/webm' });
+        const file = new File([blob], `recording-${Date.now()}.webm`, { type: blob.type });
+        handleAudioFile(file);
+        try { stream.getTracks().forEach((t) => t.stop()); } catch (e) { /* noop */ }
+      });
+
+      mr.start();
+      setIsRecording(true);
+    } catch (err) {
+      try { fileInputRef.current?.click(); } catch (e) { /* noop */ }
+      // eslint-disable-next-line no-alert
+      alert('Microphone access denied or not available. You can upload an audio file instead.');
+    }
+  };
 
   const fileInputRef = useRef(null);
 
@@ -16,6 +60,7 @@ export default function ChatBubble() {
     // load any stored audio blobs for messages
     loadStoredAudio();
   };
+const toggleVoiceRecording = () => setVoiceRecording((prev) => !prev);
 
   const closeChat = () => setIsOpen(false);
 
@@ -30,17 +75,27 @@ export default function ChatBubble() {
   };
 
   const handleSend = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isTyping) return;
     const userMsg = { id: `user-${Date.now()}`, from: 'user', text: input.trim() };
     setMessages((m) => [...m, userMsg]);
     setInput('');
-    // simulate bot reply
-    setTimeout(() => {
-      const botReply = { id: `bot-${Date.now()}`, from: 'bot', text: `You said: ${userMsg.text}` };
-      setMessages((m) => [...m, botReply]);
-      scrollToBottom();
-    }, 700);
+    setIsTyping(true);
     scrollToBottom();
+
+    // simulate bot typing indicator before reply
+    setTimeout(() => {
+      const typingMessage = { id: `typing-${Date.now()}`, from: 'bot', text: 'Typing...', isTyping: true };
+      setMessages((m) => [...m, typingMessage]);
+      scrollToBottom();
+
+      setTimeout(() => {
+        setMessages((m) => m.filter((msg) => !msg.isTyping));
+        const botReply = { id: `bot-${Date.now()}`, from: 'bot', text: `You said: ${userMsg.text}` };
+        setMessages((m) => [...m, botReply]);
+        setIsTyping(false);
+        scrollToBottom();
+      }, 900);
+    }, 200);
   };
 
   const handleAudioFile = async (file) => {
@@ -201,10 +256,22 @@ export default function ChatBubble() {
           {/* Chat Messages */}
           <div ref={messagesRef} className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.map((m) => (
-              <div key={m.id} className={`${m.from === 'bot' ? 'bg-gray-100 rounded-lg p-3 rounded-tl-none max-w-xs' : 'bg-sky-50 rounded-lg p-3 ml-auto max-w-xs'}`}>
+              <div
+                key={m.id}
+                className={`${m.from === 'bot' ? 'rounded-lg p-3 rounded-tl-none max-w-xs' : 'bg-sky-50 rounded-lg p-3 ml-auto max-w-xs'} ${m.isTyping ? 'bg-slate-100/80 border border-dashed border-slate-300' : m.from === 'bot' ? 'bg-gray-100' : ''}`}
+              >
                 <div className="flex items-start gap-2">
-                  <p className="text-sm text-text-dark">{m.text}</p>
-                  {m.from === 'bot' && (
+                  <p className="text-sm text-text-dark">
+                    {m.isTyping ? (
+                      <span className="inline-flex items-center gap-2">
+                        <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-sky-500" />
+                        Typing...
+                      </span>
+                    ) : (
+                      m.text
+                    )}
+                  </p>
+                  {m.from === 'bot' && !m.isTyping && (
                     <div className="flex flex-col gap-1">
                       <button
                         onClick={() => playMessageAudio(m)}
@@ -254,16 +321,43 @@ export default function ChatBubble() {
                 aria-label="Message input"
               />
               <input ref={fileInputRef} type="file" accept="audio/*" className="hidden" onChange={onFileChange} />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="bg-slate-200 text-slate-800 px-3 py-2 rounded-lg hover:bg-slate-300 transition-colors flex items-center justify-center"
-                aria-label="Attach audio"
-                title="Attach audio"
+              <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={(e) => {
+          const file = e.target.files[0];
+          if (file) {
+            console.log("Selected file:", file);
+          }
+        }}
+      />
+              <button 
+              onclick={() => fileInputRef.current?.click()}
+                className="bg-slate-200 text-slate-800 px-3 py-2 rounded-lg hover:bg-slate-300 transition-colors"
+                aria-label="Attach audio file"
+                title="Attach audio file"
+
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path d="M9 2a1 1 0 00-1 1v6a1 1 0 102 0V3a1 1 0 00-1-1z" />
-                  <path d="M5 10a5 5 0 0010 0h-1a4 4 0 01-8 0H5z" />
-                </svg>
+
+                📎
+              </button>
+                <button
+                onClick={toggleRecording}
+                className={`bg-slate-200 text-slate-800 px-3 py-2 rounded-lg hover:bg-slate-300 transition-colors flex items-center justify-center ${isRecording ? 'bg-red-100' : ''}`}
+                aria-label="Record or attach audio"
+                title="Record or attach audio"
+              >
+                {isRecording ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M9 2a1 1 0 00-1 1v6a1 1 0 102 0V3a1 1 0 00-1-1z" />
+                    <path d="M5 10a5 5 0 0010 0h-1a4 4 0 01-8 0H5z" />
+                  </svg>
+                )}
               </button>
               <button
                 onClick={handleSend}
