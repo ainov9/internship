@@ -23,10 +23,8 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <span className="text-3xl font-bold text-primary animate-pulse">
-           <pre>
-            NEXTAITEK ֎
-           </pre>
+            <span className="text-2xl font-bold text-primary tracking-tight">
+              NEXTAITEK <span className="text-accent-indigo">֎</span>
             </span>
           </div>
 
@@ -40,8 +38,8 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
                   event.preventDefault();
                   onNavClick(link.href);
                 }}
-                aria-label={link.label} //pour l'accessibilité
-                className="text-text-dark hover:text-primary transition-colors duration-200 font-medium"
+                aria-label={link.label}
+                className="relative text-text-dark hover:text-primary transition-colors duration-300 font-medium after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
               >
                 {link.label}
               </a>
@@ -52,7 +50,7 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
           <div className="hidden md:flex items-center space-x-4">
             <button
               onClick={onLoginClick}
-              className="text-text-dark hover:text-primary transition-colors duration-600 font-medium"
+              className="text-text-dark hover:text-primary transition-colors duration-300 font-medium"
               aria-label="Login"
             >
               Login

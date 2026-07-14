@@ -59,7 +59,7 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
     <div className="min-h-screen bg-gradient-to-br from-primary-light via-white to-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 pt-24">
       <div className="w-full max-w-md">
         {/* Card */}
-        <div className="bg-white rounded-lg shadow-xl p-8 animate-slide-up">
+        <div className="bg-white rounded-2xl shadow-xl p-8 animate-slide-up transition-shadow duration-500 hover:shadow-2xl">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-primary mb-2">ChatBot</h1>

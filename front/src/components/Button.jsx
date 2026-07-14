@@ -11,10 +11,10 @@ export default function Button({
   isMotion = false,
   ...props
 }) {
-  const baseStyles = 'font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary';
+  const baseStyles = 'font-semibold transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary';
 
   const variants = {
-    primary: 'bg-primary text-white hover:bg-opacity-90 hover:shadow-lg',
+    primary: 'bg-primary text-white hover:bg-opacity-90 hover:shadow-lg hover:shadow-primary/30',
     secondary: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
     outline: 'border-2 border-gray-300 text-text-dark hover:border-primary hover:text-primary',
   };

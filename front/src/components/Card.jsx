@@ -9,15 +9,15 @@ export default function Card({
 }) {
   return (
     <div
-      className={`bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in ${className}`}
+      className={`bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2 animate-fade-in ${className}`}
       role="article"
     >
       {image && (
-        <div className="relative overflow-hidden h-48 bg-gray-200">
+        <div className="relative overflow-hidden h-48 bg-gray-100">
           <img
             src={image}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-105"
             loading="lazy"
           />
         </div>

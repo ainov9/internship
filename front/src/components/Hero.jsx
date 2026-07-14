@@ -19,7 +19,7 @@ function AnimatedTitle({ text, className }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{
             duration: 0.5,
-            delay: 0.15 + i * 0.12,
+            delay: 0.1 + i * 0.08,
             ease: smoothEase,
           }}
         >
@@ -171,7 +171,7 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
           className="text-xl md:text-2xl text-text-muted mb-10 max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.9, ease: smoothEase }}
+          transition={{ duration: 0.6, delay: 0.5, ease: smoothEase }}
         >
           {subtitle}
         </motion.p>
@@ -183,7 +183,7 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
           animate="visible"
           variants={{
             hidden: {},
-            visible: { transition: { staggerChildren: 0.12, delayChildren: 1.2 } },
+            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.7 } },
           }}
         >
           <motion.div
@@ -196,14 +196,12 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
               className="inline-block rounded-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              animate={{ scale: [1, 1.03, 1] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
             >
               <Button
                 variant="primary"
                 size="lg"
                 onClick={onCtaClick}
-                className="shadow-lg animate-breathing"
+                className="shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 {ctaText}
               </Button>
