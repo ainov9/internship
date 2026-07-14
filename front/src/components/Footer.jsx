@@ -3,7 +3,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="bg-text-dark text-white py-12"
+      className="bg-[#0a0a0f] text-white py-12 transition-colors duration-500"
       role="contentinfo"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

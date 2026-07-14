@@ -126,7 +126,7 @@ function App() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="scroll-mt-20 py-20 bg-transparent">
+      <section id="features" className="scroll-mt-20 py-20 bg-gradient-to-b from-white via-[#faf9fe]/50 to-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <motion.h2
@@ -190,7 +190,7 @@ function App() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="scroll-mt-20 py-20 bg-gradient-to-br from-[#f0f4ff]/40 via-white/50 to-[#fef9f0]/30 backdrop-blur-[1px]">
+      <section id="about" className="scroll-mt-20 py-20 bg-gradient-to-b from-white via-[#f8f9ff]/60 to-white">
         <motion.div
           className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0 }}
@@ -243,7 +243,9 @@ function App() {
       </section>
 
       {/* CTA Section */}
-      <section id="start-chat" className="scroll-mt-20 py-20 bg-gradient-to-br from-primary via-accent-indigo to-accent-teal">
+      <section id="start-chat" className="scroll-mt-20 py-20 bg-gradient-to-br from-[#6366f1] via-[#7c3aed] to-[#0ea5e9] relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0ea5e9]/20 via-transparent to-[#6366f1]/20" />
+        <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 h-60 w-[40rem] rounded-full bg-white/10 blur-3xl" />
         <motion.div
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
           initial="hidden"
@@ -304,7 +306,7 @@ function App() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="scroll-mt-20 py-20 bg-gradient-to-tl from-[#fff1f2]/30 via-white/50 to-[#f0f4ff]/40 backdrop-blur-[1px]">
+      <section id="contact" className="scroll-mt-20 py-20 bg-gradient-to-b from-white via-[#f9f8ff]/60 to-[#faf9fe]">
         <motion.div
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
           initial="hidden"
