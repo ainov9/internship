@@ -51,9 +51,9 @@ function IconDownload() {
 
 function IconSend() {
   return (
-    <svg viewBox="0 0 24 24" className="w-[20px] h-[20px] fill-none stroke-current stroke-2 stroke-linecap-round stroke-linejoin-round" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className="w-[20px] h-[20px] stroke-current stroke-2 stroke-linecap-round stroke-linejoin-round" aria-hidden="true">
       <line x1="22" y1="2" x2="11" y2="13" />
-      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" />
     </svg>
   );
 }
@@ -374,9 +374,9 @@ export default function ChatBubble() {
   var toggleChat = function () { return isOpen ? closeChat() : openChat(); };
 
   var messageVariants = {
-    initial: { opacity: 0, y: 12, scale: 0.96 },
-    animate: { opacity: 1, y: 0, scale: 1 },
-    exit: { opacity: 0, y: -8, scale: 0.96 },
+    initial: { opacity: 0, y: 16, scale: 0.94, filter: 'blur(4px)' },
+    animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+    exit: { opacity: 0, y: -8, scale: 0.94, filter: 'blur(4px)' },
   };
 
   /* ============================================================
@@ -389,11 +389,11 @@ export default function ChatBubble() {
         {showTooltip && !isOpen && (
           <motion.div
             key="tooltip"
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.95 }}
-            transition={{ duration: 0.45, ease: [0.34, 1.56, 0.64, 1] }}
-            className="rounded-full border border-gray-200 bg-white/90 px-4 py-2 text-sm font-medium text-text-dark shadow-md backdrop-blur animate-tooltip-bounce"
+            initial={{ opacity: 0, y: 10, scale: 0.95, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: 8, scale: 0.95, filter: 'blur(4px)' }}
+            transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+            className="glass-strong rounded-full px-4 py-2 text-sm font-medium text-text-dark shadow-glass animate-tooltip-bounce"
           >
             Need help?
           </motion.div>
@@ -406,17 +406,18 @@ export default function ChatBubble() {
           {isOpen && (
             <motion.div
               key="chat-window"
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="absolute bottom-20 right-0 w-[380px] h-[520px] bg-white rounded-[22px] shadow-2xl flex flex-col overflow-hidden"
+              initial={{ opacity: 0, y: 20, scale: 0.92, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: 20, scale: 0.92, filter: 'blur(8px)' }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute bottom-20 right-0 w-[380px] h-[520px] bg-white/95 backdrop-blur-xl rounded-[22px] shadow-glass-lg flex flex-col overflow-hidden border border-white/40"
               role="dialog"
               aria-label="Chat window"
               aria-modal="true"
             >
-              <div className="bg-gradient-to-br from-violet-500 to-indigo-600 text-white px-5 py-4 rounded-t-[22px] shadow-[0_4px_20px_rgba(139,92,246,0.3)] flex justify-between items-center shrink-0">
-                <h3 className="font-semibold text-[15px] flex items-center gap-2 tracking-tight">
+              <div className="bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 text-white px-5 py-4 rounded-t-[22px] shadow-[0_4px_24px_rgba(139,92,246,0.35)] flex justify-between items-center shrink-0 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.15),transparent_60%)] pointer-events-none" />
+                <h3 className="font-semibold text-[15px] flex items-center gap-2 tracking-tight relative z-10">
                   <span className="text-lg">💬</span> Chat with Us
                 </h3>
                 <div className="flex items-center gap-1">
@@ -460,10 +461,10 @@ export default function ChatBubble() {
                       >
                         <div
                           className={
-                            'max-w-[85%] ' +
+                            'max-w-[85%] transition-all duration-300 ease-smooth ' +
                             (m.from === 'user'
-                              ? 'bg-gradient-to-br from-violet-500 to-indigo-600 text-white rounded-[16px] rounded-tr-[4px] px-4 py-2.5'
-                              : 'bg-[#F5F5F7] text-gray-800 rounded-[16px] rounded-tl-[4px] px-4 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)]')
+                              ? 'bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 text-white rounded-[18px] rounded-tr-[4px] px-4 py-2.5 shadow-[0_4px_16px_rgba(139,92,246,0.25)]'
+                              : 'bg-[#F5F5F7] text-gray-800 rounded-[18px] rounded-tl-[4px] px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.06)]')
                           }
                         >
                           <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
@@ -536,7 +537,7 @@ export default function ChatBubble() {
 
               <div className="border-t border-gray-100 px-4 pt-3 pb-4 bg-white shrink-0">
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 flex items-center bg-[#F0F0F3] rounded-full border border-gray-200/70 px-4 py-1.5 transition-all duration-200 focus-within:border-primary/40 focus-within:shadow-[0_0_0_3px_rgba(170,59,255,0.08)]">
+                  <div className="flex-1 flex items-center bg-[#F0F0F3]/80 rounded-2xl border border-gray-200/50 px-4 py-1.5 transition-all duration-300 ease-smooth focus-within:border-primary/40 focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(170,59,255,0.08)]">
                     <input
                       type="text"
                       value={input}
@@ -558,7 +559,7 @@ export default function ChatBubble() {
 
                   <button
                     onClick={function () { if (fileInputRef.current) fileInputRef.current.click(); }}
-                    className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-[#F0F0F3] text-slate-500 transition-all duration-200 ease-out hover:bg-primary/10 hover:text-primary active:scale-90 shrink-0"
+                    className="flex items-center justify-center w-[42px] h-[42px] rounded-2xl bg-[#F0F0F3]/80 text-slate-500 transition-all duration-300 ease-smooth hover:bg-primary/10 hover:text-primary hover:scale-105 active:scale-95 shrink-0"
                     aria-label="Attach audio file"
                     title="Attach audio file"
                   >
@@ -568,10 +569,10 @@ export default function ChatBubble() {
                   <button
                     onClick={toggleRecording}
                     className={
-                      'flex items-center justify-center w-[42px] h-[42px] rounded-full transition-all duration-200 ease-out active:scale-90 shrink-0 ' +
+                      'flex items-center justify-center w-[42px] h-[42px] rounded-2xl transition-all duration-300 ease-smooth active:scale-95 shrink-0 ' +
                       (isRecording
-                        ? 'bg-red-50 text-red-500 hover:bg-red-100 animate-pulse'
-                        : 'bg-[#F0F0F3] text-slate-500 hover:bg-primary/10 hover:text-primary')
+                        ? 'bg-red-50 text-red-500 hover:bg-red-100 animate-pulse shadow-[0_0_16px_rgba(239,68,68,0.2)]'
+                        : 'bg-[#F0F0F3]/80 text-slate-500 hover:bg-primary/10 hover:text-primary hover:scale-105')
                     }
                     aria-label={isRecording ? 'Stop recording' : 'Record voice'}
                     title={isRecording ? 'Stop recording' : 'Record voice'}
@@ -582,19 +583,19 @@ export default function ChatBubble() {
                   <button
                     onClick={handleSend}
                     disabled={!input.trim()}
-                    className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-md transition-all duration-200 ease-out hover:shadow-lg hover:scale-105 active:scale-95 disabled:opacity-40 disabled:pointer-events-none shrink-0"
+                    className="flex items-center justify-center w-[42px] h-[42px] rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 text-white shadow-[0_4px_16px_rgba(139,92,246,0.3)] transition-all duration-300 ease-smooth hover:shadow-glow hover:scale-105 active:scale-95 disabled:opacity-30 disabled:pointer-events-none disabled:hover:scale-100 shrink-0"
                     aria-label="Send message"
                   >
                     <IconSend />
                   </button>
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="mt-3 pt-3 border-t border-gray-100/50">
                   <button
-                    className="w-full bg-[#2E2E38] text-white text-sm font-medium px-4 py-2.5 rounded-[14px] transition-all duration-200 ease-out hover:bg-[#3a3a45] hover:shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
+                    className="w-full bg-[#2E2E38] text-white text-sm font-medium px-4 py-2.5 rounded-2xl transition-all duration-300 ease-smooth hover:bg-[#3a3a45] hover:shadow-glass active:scale-[0.98] flex items-center justify-center gap-2 group"
                     aria-label="Contact a human agent"
                   >
-                    <span className="text-base">👤</span> Contact Human assistant
+                    <span className="text-base group-hover:scale-110 transition-transform duration-300">👤</span> Contact Human assistant
                   </button>
                 </div>
               </div>
@@ -610,11 +611,11 @@ export default function ChatBubble() {
           )}
           <motion.button
             onClick={toggleChat}
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.92 }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.9 }}
             animate={!isOpen ? { y: [0, -6, 0] } : {}}
-            transition={!isOpen ? { duration: 2.5, repeat: Infinity, ease: 'easeInOut' } : {}}
-            className="relative rounded-full w-[72px] h-[72px] md:w-[80px] md:h-[80px] flex items-center justify-center bg-gradient-to-br from-violet-500 to-indigo-600 text-white text-2xl shadow-lg hover:shadow-2xl transition-shadow duration-200"
+            transition={!isOpen ? { duration: 2.5, repeat: Infinity, ease: 'easeInOut' } : { type: 'spring', stiffness: 400, damping: 25 }}
+            className="relative rounded-full w-[72px] h-[72px] md:w-[80px] md:h-[80px] flex items-center justify-center bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 text-white text-2xl shadow-glass-lg hover:shadow-glow-lg transition-shadow duration-300"
             aria-label={isOpen ? 'Close chat window' : 'Open chat window'}
           >
             {isOpen ? (

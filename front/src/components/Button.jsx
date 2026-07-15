@@ -11,23 +11,23 @@ export default function Button({
   isMotion = false,
   ...props
 }) {
-  const baseStyles = 'font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary';
+  const baseStyles = 'font-semibold transition-all duration-300 ease-smooth focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-[0.97]';
 
   const variants = {
-    primary: 'bg-primary text-white hover:bg-opacity-90 hover:shadow-lg',
-    secondary: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
-    outline: 'border-2 border-gray-300 text-text-dark hover:border-primary hover:text-primary',
+    primary: 'bg-gradient-to-br from-primary via-accent-indigo to-primary bg-[length:200%_200%] text-white hover:shadow-glow hover:bg-[length:100%_100%] hover:-translate-y-0.5',
+    secondary: 'border-2 border-primary/30 text-primary hover:border-primary hover:bg-primary/5 hover:shadow-glass hover:-translate-y-0.5',
+    outline: 'border-2 border-gray-200 text-text-dark hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:shadow-glass hover:-translate-y-0.5',
   };
 
   const sizes = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg',
+    sm: 'px-4 py-2 text-sm rounded-xl',
+    md: 'px-6 py-3 text-base rounded-xl',
+    lg: 'px-8 py-4 text-lg rounded-2xl',
   };
 
   const bubbleStyles = isBubble
-    ? 'rounded-full w-20 h-20 md:w-28 md:h-28 flex items-center justify-center shadow-lg hover:animate-bubble-bounce hover:shadow-2xl text-2xl'
-    : 'rounded-lg';
+    ? 'rounded-full w-20 h-20 md:w-28 md:h-28 flex items-center justify-center shadow-glass hover:animate-bubble-bounce hover:shadow-glow-lg text-2xl'
+    : '';
 
   const combinedClassName = `${baseStyles} ${variants[variant]} ${sizes[size]} ${bubbleStyles} ${className}`;
 
@@ -46,9 +46,9 @@ export default function Button({
       <motion.button
         className={combinedClassName}
         aria-label={ariaLabel || (typeof children === 'string' ? children : 'Button')}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+        whileHover={{ scale: 1.03, y: -2 }}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         {...props}
       >
         {children}

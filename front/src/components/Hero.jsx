@@ -15,11 +15,11 @@ function AnimatedTitle({ text, className }) {
         <motion.span
           key={i}
           className="inline-block mr-[0.25em]"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{
-            duration: 0.5,
-            delay: 0.15 + i * 0.12,
+            duration: 0.7,
+            delay: 0.2 + i * 0.1,
             ease: smoothEase,
           }}
         >
@@ -160,18 +160,18 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
 
       {/* ── Content ── */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Staggered word title - solid dark color */}
+        {/* Staggered word title - gradient text effect */}
         <AnimatedTitle
           text={title}
-          className="text-5xl md:text-6xl font-bold text-text-dark mb-4 leading-tight"
+          className="text-5xl md:text-6xl font-bold mb-4 leading-tight gradient-text"
         />
 
         {/* Subtitle */}
         <motion.p
-          className="text-xl md:text-2xl text-text-muted mb-10 max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.9, ease: smoothEase }}
+          className="text-xl md:text-2xl text-text-muted mb-10 max-w-3xl mx-auto leading-relaxed"
+          initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.8, delay: 1, ease: smoothEase }}
         >
           {subtitle}
         </motion.p>

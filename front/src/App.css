@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  background: #ffffff;
-  transition: background 0.6s ease;
+  background: #b8a9f0;
+  transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .app-shell {
@@ -15,7 +15,109 @@ body {
 }
 
 .app-shell > nav {
-  z-index: 1000;
+  z-index: 9999;
+}
+
+/* ── Glass morphism utilities ── */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-dark {
+  background: rgba(8, 6, 13, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Gradient text utility ── */
+.gradient-text {
+  background: linear-gradient(135deg, #aa3bff 0%, #6366f1 40%, #0ea5e9 70%, #aa3bff 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientTextShift 6s ease-in-out infinite;
+}
+
+@keyframes gradientTextShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ── Smooth input focus ring ── */
+.smooth-focus {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 0 0 rgba(170, 59, 255, 0);
+}
+
+.smooth-focus:focus {
+  box-shadow: 0 0 0 3px rgba(170, 59, 255, 0.12), 0 0 0 1px rgba(170, 59, 255, 0.3);
+  border-color: rgba(170, 59, 255, 0.5);
+}
+
+/* ── Floating label input ── */
+.float-label-group {
+  position: relative;
+}
+
+.float-label-group input {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.float-label-group input::placeholder {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.float-label-group:focus-within input::placeholder {
+  opacity: 0;
+  transform: translateY(-2px);
+}
+
+/* ── Soft card glow on hover ── */
+.card-glow {
+  position: relative;
+}
+
+.card-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(170, 59, 255, 0.15), rgba(99, 102, 241, 0.1), rgba(14, 165, 233, 0.08));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+/* ── Smooth page transitions ── */
+.page-enter {
+  animation: pageSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Full-page animated background for home page ── */
