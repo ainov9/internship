@@ -3,7 +3,11 @@ export default function Footer() {
 
   return (
     <footer
+<<<<<<< HEAD
       className="bg-text-dark text-white py-12 relative overflow-hidden"
+=======
+      className="bg-[#0a0a0f] text-white py-12 transition-colors duration-500"
+>>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
       role="contentinfo"
     >
       {/* Subtle gradient overlay */}

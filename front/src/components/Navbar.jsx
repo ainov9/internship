@@ -33,8 +33,13 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
+<<<<<<< HEAD
             <span className="text-3xl font-bold gradient-text select-none">
               NEXTAITEK
+=======
+            <span className="text-2xl font-bold text-primary tracking-tight">
+              NEXTAITEK <span className="text-accent-indigo">֎</span>
+>>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
             </span>
           </div>
 
@@ -49,7 +54,11 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
                   onNavClick(link.href);
                 }}
                 aria-label={link.label}
+<<<<<<< HEAD
                 className="relative px-4 py-2 text-sm font-medium text-text-muted hover:text-primary transition-all duration-300 ease-smooth rounded-lg hover:bg-primary/5 group"
+=======
+                className="relative text-text-dark hover:text-primary transition-colors duration-300 font-medium after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
+>>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
               >
                 {link.label}
                 <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-primary to-accent-indigo rounded-full transition-all duration-300 ease-smooth group-hover:w-3/4" />
@@ -61,7 +70,11 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
           <div className="hidden md:flex items-center space-x-3">
             <button
               onClick={onLoginClick}
+<<<<<<< HEAD
               className="px-4 py-2 text-sm font-medium text-text-muted hover:text-primary transition-all duration-300 ease-smooth rounded-lg hover:bg-primary/5"
+=======
+              className="text-text-dark hover:text-primary transition-colors duration-300 font-medium"
+>>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
               aria-label="Login"
             >
               Login
