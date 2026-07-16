@@ -1,11 +1,7 @@
 body {
   margin: 0;
-<<<<<<< HEAD
-  background: #b8a9f0;
-  transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-=======
   background: #ffffff;
-  transition: background 0.6s ease;
+  transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
@@ -13,7 +9,6 @@ body {
 
 * {
   scroll-behavior: smooth;
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
 }
 
 .app-shell {

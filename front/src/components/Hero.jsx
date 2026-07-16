@@ -3,10 +3,8 @@ import Button from './Button';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
-/* ── Easing curve used throughout ── */
 const smoothEase = [0.16, 1, 0.3, 1];
 
-/* ── Staggered word reveal for the title ── */
 function AnimatedTitle({ text, className }) {
   const words = text.split(' ');
   return (
@@ -18,13 +16,8 @@ function AnimatedTitle({ text, className }) {
           initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{
-<<<<<<< HEAD
             duration: 0.7,
             delay: 0.2 + i * 0.1,
-=======
-            duration: 0.5,
-            delay: 0.1 + i * 0.08,
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
             ease: smoothEase,
           }}
         >
@@ -36,7 +29,6 @@ function AnimatedTitle({ text, className }) {
 }
 
 export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClick, onCreateAssistant, backgroundImage }) {
-  /* ── Node glow sequencing state ── */
   const [glowMap, setGlowMap] = useState({});
 
   useEffect(() => {
@@ -83,25 +75,19 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
       role="region"
       aria-label="Hero section"
     >
-      {/* ── Soft premium gradient background ── */}
       <div className="hero-aurora-bg absolute inset-0 z-0" />
-
-      {/* Gradient drift overlays */}
       <div className="hero-gradient-drift pointer-events-none absolute inset-0 z-0 opacity-40" />
       <div className="hero-side-gradient-left pointer-events-none absolute inset-y-0 left-0 z-0 w-1/2 opacity-40" />
       <div className="hero-side-gradient-right pointer-events-none absolute inset-y-0 right-0 z-0 w-1/2 opacity-40" />
 
-      {/* Glass-morphism blurred circles */}
       <div className="pointer-events-none absolute -left-28 top-10 z-0 h-72 w-72 rounded-full bg-gradient-to-br from-[#8B5CF6]/20 to-[#6366F1]/12 blur-3xl md:h-96 md:w-96 hero-blob-a" />
       <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 h-80 w-80 rounded-full bg-gradient-to-br from-[#3B82F6]/10 to-[#6366F1]/8 blur-3xl md:h-[30rem] md:w-[30rem]" />
       <div className="pointer-events-none absolute -bottom-28 -right-24 z-0 h-80 w-80 rounded-full bg-gradient-to-br from-[#EC4899]/15 to-[#8B5CF6]/10 blur-3xl md:h-[30rem] md:w-[30rem] hero-blob-b" />
 
-      {/* Floating circles */}
       <div className="pointer-events-none absolute left-[8%] top-[28%] z-0 h-3 w-3 rounded-full bg-[#8B5CF6]/10 hero-float-circle" />
       <div className="pointer-events-none absolute right-[14%] top-[24%] z-0 h-5 w-5 rounded-full border border-[#8B5CF6]/10 bg-white/20 hero-float-circle hero-float-delay" />
       <div className="pointer-events-none absolute bottom-[26%] left-[18%] z-0 h-8 w-8 rounded-full border border-[#6366F1]/8 bg-[#8B5CF6]/5 hero-float-circle hero-float-slow" />
 
-      {/* ── Neural network SVG ── */}
       <svg
         className="pointer-events-none absolute inset-x-0 top-20 z-0 h-[62%] w-full hero-network-float"
         viewBox="0 0 1200 520"
@@ -122,33 +108,9 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
         ))}
         {nodes.map((n, i) => (
           <g key={`node-${i}`}>
-            <circle
-              cx={n.cx}
-              cy={n.cy}
-              r={n.r}
-              className="hero-network-node"
-              style={{ animationDelay: `${i * 0.6}s` }}
-            />
-            <circle
-              cx={n.cx}
-              cy={n.cy}
-              r={n.r + 5}
-              fill="none"
-              stroke="#8B5CF6"
-              strokeWidth="0.8"
-              opacity={glowMap[i] ? 0.5 : 0}
-              style={{ transition: 'opacity 1.2s ease' }}
-            />
-            <circle
-              cx={n.cx}
-              cy={n.cy}
-              r={n.r + 10}
-              fill="none"
-              stroke="#3B82F6"
-              strokeWidth="0.4"
-              opacity={glowMap[i] ? 0.25 : 0}
-              style={{ transition: 'opacity 1.2s ease' }}
-            />
+            <circle cx={n.cx} cy={n.cy} r={n.r} className="hero-network-node" style={{ animationDelay: `${i * 0.6}s` }} />
+            <circle cx={n.cx} cy={n.cy} r={n.r + 5} fill="none" stroke="#8B5CF6" strokeWidth="0.8" opacity={glowMap[i] ? 0.5 : 0} style={{ transition: 'opacity 1.2s ease' }} />
+            <circle cx={n.cx} cy={n.cy} r={n.r + 10} fill="none" stroke="#3B82F6" strokeWidth="0.4" opacity={glowMap[i] ? 0.25 : 0} style={{ transition: 'opacity 1.2s ease' }} />
           </g>
         ))}
         <defs>
@@ -160,35 +122,23 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
         </defs>
       </svg>
 
-      {/* Grid pattern overlay */}
       <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(rgba(99,102,241,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.03)_1px,transparent_1px)] bg-[size:72px_72px] opacity-40" />
 
-      {/* ── Content ── */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Staggered word title - gradient text effect */}
         <AnimatedTitle
           text={title}
           className="text-5xl md:text-6xl font-bold mb-4 leading-tight gradient-text"
         />
 
-        {/* Subtitle */}
         <motion.p
-<<<<<<< HEAD
           className="text-xl md:text-2xl text-text-muted mb-10 max-w-3xl mx-auto leading-relaxed"
           initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 0.8, delay: 1, ease: smoothEase }}
-=======
-          className="text-xl md:text-2xl text-text-muted mb-10 max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: smoothEase }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
         >
           {subtitle}
         </motion.p>
 
-        {/* ── Buttons ── */}
         <motion.div
           className="flex flex-col sm:flex-row gap-4 justify-center"
           initial="hidden"
@@ -198,67 +148,25 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
             visible: { transition: { staggerChildren: 0.12, delayChildren: 0.7 } },
           }}
         >
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 20, scale: 0.9 },
-              visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: smoothEase } },
-            }}
-          >
-            <motion.div
-              className="inline-block rounded-lg"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={onCtaClick}
-                className="shadow-lg hover:shadow-xl transition-shadow duration-300"
-              >
+          <motion.div variants={{ hidden: { opacity: 0, y: 20, scale: 0.9 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: smoothEase } } }}>
+            <motion.div className="inline-block rounded-lg" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="primary" size="lg" onClick={onCtaClick} className="shadow-lg hover:shadow-xl transition-shadow duration-300">
                 {ctaText}
               </Button>
             </motion.div>
           </motion.div>
 
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 20, scale: 0.9 },
-              visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: smoothEase } },
-            }}
-          >
-            <motion.div
-              className="group inline-block rounded-lg"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                className="border-gray-300 text-text-dark group-hover:border-primary group-hover:bg-primary/5 transition-all duration-300"
-              >
+          <motion.div variants={{ hidden: { opacity: 0, y: 20, scale: 0.9 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: smoothEase } } }}>
+            <motion.div className="group inline-block rounded-lg" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Button variant="outline" size="lg" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })} className="border-gray-300 text-text-dark group-hover:border-primary group-hover:bg-primary/5 transition-all duration-300">
                 Learn More
               </Button>
             </motion.div>
           </motion.div>
 
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 20, scale: 0.9 },
-              visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: smoothEase } },
-            }}
-          >
-            <motion.div
-              className="group inline-block rounded-lg"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={onAdminClick}
-                className="border-primary text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300"
-              >
+          <motion.div variants={{ hidden: { opacity: 0, y: 20, scale: 0.9 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: smoothEase } } }}>
+            <motion.div className="group inline-block rounded-lg" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Button variant="secondary" size="lg" onClick={onAdminClick} className="border-primary text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
                 Enter as Admin
               </Button>
             </motion.div>
@@ -266,33 +174,12 @@ export default function Hero({ title, subtitle, ctaText, onCtaClick, onAdminClic
         </motion.div>
       </div>
 
-      {/* ── Layered wave divider ── */}
       <div className="pointer-events-none absolute bottom-[-1px] left-0 z-10 w-full">
-        <svg
-          className="h-20 w-full text-white/90 md:h-28 hero-wave-drift"
-          viewBox="0 0 1440 120"
-          fill="none"
-          aria-hidden="true"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 72L80 62C160 52 320 32 480 38C640 44 800 76 960 78C1120 80 1280 52 1360 38L1440 24V120H0V72Z"
-            fill="url(#wave-gradient)"
-          />
+        <svg className="h-20 w-full text-white/90 md:h-28 hero-wave-drift" viewBox="0 0 1440 120" fill="none" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M0 72L80 62C160 52 320 32 480 38C640 44 800 76 960 78C1120 80 1280 52 1360 38L1440 24V120H0V72Z" fill="url(#wave-gradient)" />
         </svg>
-        <svg
-          className="h-16 w-full text-white/60 -mt-8 md:h-20 hero-wave-drift"
-          style={{ animationDelay: '-3s' }}
-          viewBox="0 0 1440 100"
-          fill="none"
-          aria-hidden="true"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 50L80 60C160 70 320 90 480 85C640 80 800 50 960 48C1120 46 1280 60 1360 65L1440 70V100H0V50Z"
-            fill="url(#wave-gradient-2)"
-            opacity="0.6"
-          />
+        <svg className="h-16 w-full text-white/60 -mt-8 md:h-20 hero-wave-drift" style={{ animationDelay: '-3s' }} viewBox="0 0 1440 100" fill="none" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M0 50L80 60C160 70 320 90 480 85C640 80 800 50 960 48C1120 46 1280 60 1360 65L1440 70V100H0V50Z" fill="url(#wave-gradient-2)" opacity="0.6" />
         </svg>
         <defs>
           <linearGradient id="wave-gradient" x1="0" y1="0" x2="1" y2="0">

@@ -135,38 +135,24 @@ function App() {
           <div className="text-center mb-16">
             <motion.h2
               className="text-4xl md:text-5xl font-bold text-text-dark mb-4"
-<<<<<<< HEAD
               initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-=======
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
               viewport={{ once: true, amount: 0.3 }}
             >
               Why Choose Us?
             </motion.h2>
             <motion.p
-<<<<<<< HEAD
               className="text-xl text-text-muted max-w-2xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-=======
-              className="text-xl text-text-muted max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
               viewport={{ once: true, amount: 0.3 }}
             >
               Discover the features that make our chatbot the perfect solution for your needs.
             </motion.p>
           </div>
 
-<<<<<<< HEAD
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <motion.div
@@ -175,26 +161,6 @@ function App() {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
                 viewport={{ once: true, amount: 0.3 }}
-=======
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            initial="hidden"
-            whileInView="visible"
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
-            }}
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                variants={{
-                  hidden: { opacity: 0, y: 30, scale: 0.95 },
-                  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-                }}
-                whileHover={{ y: -8, transition: { duration: 0.25 } }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
               >
                 <Card
                   title={feature.title}
@@ -228,15 +194,9 @@ function App() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <motion.div
-<<<<<<< HEAD
               initial={{ opacity: 0, x: -40, filter: 'blur(6px)' }}
               whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-=======
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
               viewport={{ once: true, amount: 0.3 }}
             >
               <h2 className="text-4xl font-bold text-text-dark mb-6 leading-tight">
@@ -260,28 +220,16 @@ function App() {
               </motion.div>
             </motion.div>
             <motion.div
-<<<<<<< HEAD
               initial={{ opacity: 0, x: 40, filter: 'blur(6px)' }}
               whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true, amount: 0.3 }}
               whileHover={{ scale: 1.03 }}
-=======
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              viewport={{ once: true, amount: 0.3 }}
-              whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
             >
               <img
                 src="/image.png"
                 alt="About ChatBot"
-<<<<<<< HEAD
                 className="w-full rounded-2xl shadow-glass-lg hover:shadow-glow transition-all duration-500 ease-smooth"
-=======
-                className="w-full rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-500"
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
               />
             </motion.div>
           </div>
@@ -289,7 +237,6 @@ function App() {
       </section>
 
       {/* CTA Section */}
-<<<<<<< HEAD
       <section id="start-chat" className="scroll-mt-20 py-20 bg-gradient-to-br from-primary via-accent-indigo to-accent-teal relative overflow-hidden">
         {/* Subtle overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_60%)] pointer-events-none" />
@@ -299,67 +246,32 @@ function App() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-=======
-      <section id="start-chat" className="scroll-mt-20 py-20 bg-gradient-to-br from-[#6366f1] via-[#7c3aed] to-[#0ea5e9] relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0ea5e9]/20 via-transparent to-[#6366f1]/20" />
-        <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 h-60 w-[40rem] rounded-full bg-white/10 blur-3xl" />
-        <motion.div
-          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
-          initial="hidden"
-          whileInView="visible"
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
-          }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
           viewport={{ once: true, amount: 0.3 }}
         >
           <motion.h2
             className="text-4xl md:text-5xl font-bold text-white mb-6"
-<<<<<<< HEAD
             initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true, amount: 0.3 }}
-=======
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-            }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
           >
             Ready to Chat?
           </motion.h2>
           <motion.p
-<<<<<<< HEAD
             className="text-xl text-white/90 mb-10 leading-relaxed"
             initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true, amount: 0.3 }}
-=======
-            className="text-xl text-white mb-8"
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-            }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
           >
             Start a conversation with our AI chatbot today and experience the future of communication.
           </motion.p>
           <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center"
-<<<<<<< HEAD
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true, amount: 0.3 }}
-=======
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-            }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
           >
             <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.96 }}>
               <Button
@@ -389,52 +301,27 @@ function App() {
       <section id="contact" className="scroll-mt-20 py-20 bg-gradient-to-b from-white via-[#f9f8ff]/60 to-[#faf9fe]">
         <motion.div
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
-<<<<<<< HEAD
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true, amount: 0.3 }}
-=======
-          initial="hidden"
-          whileInView="visible"
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
-          }}
-          viewport={{ once: true, amount: 0.2 }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
         >
           <div className="text-center mb-12">
             <motion.h2
               className="text-4xl font-bold text-text-dark mb-4"
-<<<<<<< HEAD
               initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true, amount: 0.3 }}
-=======
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-              }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
             >
               Get In Touch
             </motion.h2>
             <motion.p
-<<<<<<< HEAD
               className="text-xl text-text-muted leading-relaxed"
               initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true, amount: 0.3 }}
-=======
-              className="text-xl text-text-muted"
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-              }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
             >
               Have questions? We'd love to hear from you. Send us a message!
             </motion.p>
@@ -442,17 +329,10 @@ function App() {
 
           <motion.form
             className="max-w-md mx-auto space-y-4"
-<<<<<<< HEAD
             initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true, amount: 0.3 }}
-=======
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-            }}
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
           >
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-text-dark mb-2">

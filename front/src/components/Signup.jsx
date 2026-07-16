@@ -63,11 +63,7 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
 
       <div className="w-full max-w-md relative z-10">
         {/* Card */}
-<<<<<<< HEAD
         <div className="glass-strong rounded-3xl shadow-glass-lg p-8 animate-scale-in">
-=======
-        <div className="bg-white rounded-2xl shadow-xl p-8 animate-slide-up transition-shadow duration-500 hover:shadow-2xl">
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold gradient-text mb-2">ChatBot</h1>

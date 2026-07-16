@@ -11,21 +11,12 @@ export default function Button({
   isMotion = false,
   ...props
 }) {
-<<<<<<< HEAD
   const baseStyles = 'font-semibold transition-all duration-300 ease-smooth focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-[0.97]';
 
   const variants = {
     primary: 'bg-gradient-to-br from-primary via-accent-indigo to-primary bg-[length:200%_200%] text-white hover:shadow-glow hover:bg-[length:100%_100%] hover:-translate-y-0.5',
     secondary: 'border-2 border-primary/30 text-primary hover:border-primary hover:bg-primary/5 hover:shadow-glass hover:-translate-y-0.5',
     outline: 'border-2 border-gray-200 text-text-dark hover:border-primary/40 hover:text-primary hover:bg-primary/5 hover:shadow-glass hover:-translate-y-0.5',
-=======
-  const baseStyles = 'font-semibold transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary';
-
-  const variants = {
-    primary: 'bg-primary text-white hover:bg-opacity-90 hover:shadow-lg hover:shadow-primary/30',
-    secondary: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
-    outline: 'border-2 border-gray-300 text-text-dark hover:border-primary hover:text-primary',
->>>>>>> 960654c53ccb50494850bb3a07b2eb97a0f29540
   };
 
   const sizes = {
