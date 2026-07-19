@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from services.chat_ai import process_message
-from services.dataset_service import handle_uploaded_file
-from services.analytics_service import generate_analytics
+from dataset.services.upload_service import handle_uploaded_file
+from analytics import generate_analytics
 
 
 @api_view(['POST'])
