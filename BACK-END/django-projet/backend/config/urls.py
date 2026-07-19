@@ -19,9 +19,14 @@ from django.urls import path
 from django.urls import path, include
 
 urlpatterns = [
-    path("api/users/", include("apps.users.urls")),
-    path("api/chat/", include("apps.chatbot.urls")),
-    path("api/datasets/", include("apps.datasets.urls")),
-    path("api/analytics/", include("apps.analytics.urls")),
+    path("user/", include("apps.user.urls")),
+    path("chatbot/", include("apps.chatbot.urls")),
+    path("dataset/", include("apps.dataset.urls")),
+    path("analytics/", include("apps.analytics.urls")),
+    path("admin/", admin.site.urls),
+    path("media/", include("django.conf.urls.static")),
+    
 ]
+
+
 
