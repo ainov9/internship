@@ -1,6 +1,8 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
+
 /* ============================================================
    Animated typing dots – three pulsing dots in sequence
    ============================================================ */
@@ -201,8 +203,9 @@ export default function ChatBubble() {
   }, []);
 
   /* ---------- send message ---------- */
-  var handleSend = useCallback(function () {
+  var handleSend = useCallback(async function () {
     if (!input.trim() || isTyping) return;
+    
     var userMsg = { id: 'user-' + Date.now(), from: 'user', text: input.trim() };
     setMessages(function (m) { return m.concat([userMsg]); });
     setInput('');
@@ -214,18 +217,42 @@ export default function ChatBubble() {
       scrollToBottom();
     }, 100);
 
-    setTimeout(function () {
+    try {
+      // ✅ APPPEL FETCH DIRECT vers /api/chatbot/chat/
+      const response = await fetch(`${API_BASE_URL}/chatbot/chat/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Ajoutez le token si l'utilisateur est connecté
+          ...(localStorage.getItem('token') && {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          })
+        },
+        body: JSON.stringify({
+          message: input.trim(),
+          user_id: 1 // ou utiliser l'ID utilisateur réel
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
       setShowTyping(false);
       var replyDate = new Date();
       var botMsg = {
         id: 'bot-' + Date.now(),
         from: 'bot',
-        text: 'You said: ' + userMsg.text,
+        text: data.message || data.reply || 'No response received',
         seenAt: null,
       };
       setMessages(function (m) { return m.concat([botMsg]); });
       setIsTyping(false);
       scrollToBottom();
+      
       setTimeout(function () {
         setMessages(function (m) {
           return m.map(function (msg) {
@@ -235,8 +262,45 @@ export default function ChatBubble() {
         });
         updateSeenLabel(userMsg.id, replyDate);
       }, 800);
-    }, 1400);
+    } catch (error) {
+      console.error('Fetch Error:', error);
+      // Fallback to mock response if API fails
+      setTimeout(function () {
+        setShowTyping(false);
+        var replyDate = new Date();
+        var botMsg = {
+          id: 'bot-' + Date.now(),
+          from: 'bot',
+          text: `Désolé, erreur: ${error.message}. Vérifiez que le backend est démarré.`,
+          seenAt: null,
+        };
+        setMessages(function (m) { return m.concat([botMsg]); });
+        setIsTyping(false);
+        scrollToBottom();
+        updateSeenLabel(userMsg.id, replyDate);
+      }, 1400);
+    }
   }, [input, isTyping, scrollToBottom, updateSeenLabel]);
+
+  // ✅ NOUVELLE FONCTION: Récupérer l'historique d'une conversation
+  var fetchConversationHistory = async function (conversationId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/chatbot/conversations/${conversationId}/history/`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch conversation history');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching conversation history:', error);
+      return [];
+    }
+  };
 
   var handleInputChange = function (e) { setInput(e.target.value); };
 
@@ -329,29 +393,44 @@ export default function ChatBubble() {
 
   var generateAndStoreAudio = async function (msg) {
     try {
-      var res = await fetch('/api/tts', {
+      // ✅ APPPEL FETCH DIRECT vers /api/tts/
+      const response = await fetch(`${API_BASE_URL}/tts/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: msg.text }),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(localStorage.getItem('token') && {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          })
+        },
+        body: JSON.stringify({ text: msg.text })
       });
-      if (!res.ok) throw new Error('TTS endpoint not available');
-      var arrayBuffer = await res.arrayBuffer();
-      var base64 = arrayBufferToBase64(arrayBuffer);
-      localStorage.setItem('audio_' + msg.id, base64);
-      var blob = new Blob([arrayBuffer], { type: 'audio/wav' });
-      var url = URL.createObjectURL(blob);
-      setMessages(function (cur) {
-        return cur.map(function (m) {
-          if (m.id === msg.id) return { id: m.id, from: m.from, text: m.text, audioUrl: url, isTyping: m.isTyping, seenAt: m.seenAt };
-          return m;
-        });
-      });
-    } catch (_e6) {
-      var pending = JSON.parse(localStorage.getItem('pending_audio_requests') || '[]');
-      if (pending.indexOf(msg.id) === -1) {
-        pending.push(msg.id);
-        localStorage.setItem('pending_audio_requests', JSON.stringify(pending));
+
+      if (!response.ok) {
+        throw new Error('TTS endpoint error');
       }
+
+      // Si réponse audio binaire
+      if (response.headers.get('content-type')?.includes('audio')) {
+        const arrayBuffer = await response.arrayBuffer();
+        var base64 = arrayBufferToBase64(arrayBuffer);
+        localStorage.setItem('audio_' + msg.id, base64);
+        var blob = new Blob([arrayBuffer], { type: 'audio/wav' });
+        var url = URL.createObjectURL(blob);
+
+        setMessages(function (cur) {
+          return cur.map(function (m) {
+            if (m.id === msg.id) return { id: m.id, from: m.from, text: m.text, audioUrl: url, isTyping: m.isTyping, seenAt: m.seenAt };
+            return m;
+          });
+        });
+        return;
+      }
+
+      // Sinon, fallback vers le TTS du navigateur
+      throw new Error('Backend TTS not returning audio yet');
+
+    } catch (_e6) {
+      console.warn('Using browser TTS as fallback');
       playMessageAudio(msg);
     }
   };

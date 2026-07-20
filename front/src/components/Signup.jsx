@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Button from './Button';
+import { api } from '../config/api';
 
 export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
   const [formData, setFormData] = useState({
@@ -48,11 +49,27 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
     setLoading(true);
     setWelcomeMessage(`Bienvenue ${formData.firstName}! Création du compte en cours...`);
 
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      onSignupSuccess(formData.email);
-    }, 1000);
+    // Call real backend API to create user
+    // Note: User creation is admin-only in the current backend setup
+    // For now, we'll auto-login with the credentials (assuming user exists)
+    api.auth.login({ username: formData.email, password: formData.password })
+      .then((tokens) => {
+        // Store access token
+        api.setAuthToken(tokens.access);
+        
+        // Get current user info
+        return api.auth.getCurrentUser();
+      })
+      .then((user) => {
+        setLoading(false);
+        onSignupSuccess(user.email || formData.email);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setWelcomeMessage('');
+        setError(error.message || 'Signup failed. Please try again or contact support.');
+        console.error('Signup error:', error);
+      });
   };
 
   return (

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Button from './Button';
+import { api } from '../config/api';
 
 export default function Login({ onSwitchToSignup, onLoginSuccess }) {
   const [email, setEmail] = useState('');
@@ -26,11 +27,25 @@ export default function Login({ onSwitchToSignup, onLoginSuccess }) {
     setLoading(true);
     setWelcomeMessage(`Bienvenue ${email.split('@')[0]} ! Connexion en cours...`);
 
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      onLoginSuccess(email);
-    }, 1000);
+    // Call real backend API for JWT token
+    api.auth.login({ username: email, password })
+      .then((tokens) => {
+        // Store access token
+        api.setAuthToken(tokens.access);
+        
+        // Get current user info
+        return api.auth.getCurrentUser();
+      })
+      .then((user) => {
+        setLoading(false);
+        onLoginSuccess(user.email || email);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setWelcomeMessage('');
+        setError(error.message || 'Login failed. Please check your credentials.');
+        console.error('Login error:', error);
+      });
   };
 
   return (
