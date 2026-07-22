@@ -1,3 +1,16 @@
 from django.contrib import admin
+from chatbot.models import Conversation, Message
 
-# Register your models here.
+
+@admin.register(Conversation)
+class ConversationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_id', 'title', 'created_at', 'updated_at')
+    list_filter = ('created_at',)
+    search_fields = ('title',)
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'conversation', 'role', 'content', 'tokens_used', 'created_at')
+    list_filter = ('role', 'created_at')
+    search_fields = ('content',)

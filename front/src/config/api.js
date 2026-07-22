@@ -5,21 +5,29 @@
 
 // Base API URL - can be configured via environment variable
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
-// Default headers for all requests
-const getHeaders = (token = null) => {
-  const headers = {
+const API_BASE_URL = 'http://127.0.0.1:8000/api';  // url de la base ,pointe sur le serveure local de django 
+
+/*Fonction : Crée les headers HTTP pour les requêtes
+Paramètre : token (optionnel) pour l'authentification JWT
+Comportement :
+Toujours envoie Content-Type: application/json
+Ajoute Authorization: Bearer <token> si un token est fourni
+Utilisation : Utilisée dans toutes les requêtes pour standardiser les headers  */
+
+const getHeaders = (token = null) => {// creation of an arrow function  with null on parameter values if we  dont give a value it still null
+ // creation of an object with json as type
+  const headers = {// creation of an object with json as type 
     'Content-Type': 'application/json',
   };
   
-  if (token) {
+  if (token) {// if token exist we will give the auth
     headers['Authorization'] = `Bearer ${token}`;
   }
   
-  return headers;
+  return headers;  
 };
 
-// Get auth token from localStorage
+// recuper le jwt
 const getAuthToken = () => {
   return localStorage.getItem('token') || null;
 };
@@ -36,30 +44,31 @@ const removeAuthToken = () => {
 
 // Main API request function
 const apiRequest = async (endpoint, options = {}) => {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const url = `${API_BASE_URL}${endpoint}`;//bringing the url 
   const token = options.token || getAuthToken();
+// bring the token
   
   const defaultOptions = {
     headers: getHeaders(token),
     ...options,
   };
   
-  try {
+  try {// la requete part vers django
     const response = await fetch(url, defaultOptions);
     
-    // Handle 401 Unauthorized - remove token and redirect to login
+          // Handle 401 Unauthorized - remove token and redirect to login
     if (response.status === 401) {
       removeAuthToken();
       window.location.href = '/login';
       return null;
     }
     
-    // For 204 No Content, return empty object
+       // For 204 No Content, return empty object
     if (response.status === 204) {
       return { success: true };
     }
     
-    // For 404, return null
+      // For 404, return null
     if (response.status === 404) {
       return null;
     }
@@ -81,7 +90,7 @@ const apiRequest = async (endpoint, options = {}) => {
 // API endpoints organized by domain
 export const api = {
   // Base URL
-  baseUrl: API_BASE_URL,
+      baseUrl: API_BASE_URL,
   
   // Auth endpoints
   auth: {
@@ -95,6 +104,7 @@ export const api = {
       body: JSON.stringify({ refresh: refreshToken }),
       token: null,
     }),
+    
     getCurrentUser: () => apiRequest('/users/current/'),
   },
   

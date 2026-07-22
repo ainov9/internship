@@ -1,71 +1,64 @@
-import json
-import os
-from pathlib import Path
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from openai import OpenAI
-from dotenv import load_dotenv
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
-load_dotenv(Path(__file__).resolve().parent.parent / '.env')
+from chatbot.serializers import (
+    ChatRequestSerializer,
+    ChatResponseSerializer,
+    ConversationDetailSerializer,
+    ConversationListSerializer,
+)
+from chatbot.services import chat_service
 
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
+class ChatView(APIView):
+    def post(self, request):
+        serializer = ChatRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-@csrf_exempt
-def chat_view(request):
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
-
-    try:
-        body = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
-    message = body.get('message', '').strip()
-    user_id = body.get('user_id', 1)
-
-    if not message:
-        return JsonResponse({'error': 'Message is required'}, status=400)
-
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Tu es un assistant IA utile et amical. Réponds toujours en français de manière claire et concise."},
-                {"role": "user", "content": message}
-            ],
-            max_tokens=500,
-            temperature=0.7,
+        data = serializer.validated_data
+        result = chat_service.send_message(
+            message_text=data['message'],
+            user_id=data['user_id'],
+            conversation_id=data.get('conversation_id'),
         )
-        reply = response.choices[0].message.content
-    except Exception as e:
-        return JsonResponse({
-            'error': f'OpenAI API error: {str(e)}',
-            'status': 'error',
-        }, status=500)
 
-    return JsonResponse({
-        'message': reply,
-        'user_id': user_id,
-        'status': 'success',
-    })
+        response_serializer = ChatResponseSerializer(result)
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
 
 
-@csrf_exempt
-def tts_view(request):
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
+class ConversationHistoryView(APIView):
+    def get(self, request, conversation_id):
+        user_id = request.query_params.get('user_id', 1)
+        result = chat_service.get_conversation_history(conversation_id, user_id)
 
-    try:
-        body = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        if result is None:
+            return Response(
+                {'error': 'Conversation not found'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
-    text = body.get('text', '').strip()
-    if not text:
-        return JsonResponse({'error': 'Text is required'}, status=400)
+        serializer = ConversationDetailSerializer(result)
+        return Response(serializer.data)
 
-    return JsonResponse({
-        'message': 'TTS not yet implemented in backend. Use browser TTS fallback.',
-        'status': 'not_implemented',
-    }, status=501)
+
+class ConversationListView(APIView):
+    def get(self, request):
+        user_id = request.query_params.get('user_id', 1)
+        conversations = chat_service.list_conversations(user_id)
+        serializer = ConversationListSerializer(conversations, many=True)
+        return Response(serializer.data)
+
+
+class TTSView(APIView):
+    def post(self, request):
+        text = request.data.get('text', '').strip()
+        if not text:
+            return Response(
+                {'error': 'Text is required'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return Response(
+            {'message': 'TTS not yet implemented. Use browser TTS fallback.', 'status': 'not_implemented'},
+            status=status.HTTP_501_NOT_IMPLEMENTED,
+        )
