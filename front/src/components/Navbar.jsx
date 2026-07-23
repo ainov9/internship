@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Button from './Button';
 
-export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
+export default function Navbar({ onNavClick, onLoginClick, onSignupClick, user, onLogout }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -59,21 +59,36 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            <button
-              onClick={onLoginClick}
-              className="px-4 py-2 text-sm font-medium text-text-muted hover:text-primary transition-all duration-300 ease-smooth rounded-lg hover:bg-primary/5"
-              aria-label="Login"
-            >
-              Login
-            </button>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={onSignupClick}
-              className="shadow-sm hover:shadow-glow transition-shadow duration-300"
-            >
-              Sign Up
-            </Button>
+            {user ? (
+              <>
+                <span className="text-sm text-text-muted">{user.email}</span>
+                <button
+                  onClick={onLogout}
+                  className="px-4 py-2 text-sm font-medium text-text-muted hover:text-primary transition-all duration-300 ease-smooth rounded-lg hover:bg-primary/5"
+                  aria-label="Logout"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={onLoginClick}
+                  className="px-4 py-2 text-sm font-medium text-text-muted hover:text-primary transition-all duration-300 ease-smooth rounded-lg hover:bg-primary/5"
+                  aria-label="Login"
+                >
+                  Login
+                </button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={onSignupClick}
+                  className="shadow-sm hover:shadow-glow transition-shadow duration-300"
+                >
+                  Sign Up
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Hamburger Menu Button */}
@@ -125,26 +140,43 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick }) {
               </a>
             ))}
             <div className="px-3 py-3 space-y-2 border-t border-gray-100/50 mt-2">
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  onLoginClick();
-                }}
-                className="w-full text-text-dark hover:text-primary hover:bg-primary/5 block px-4 py-2.5 rounded-xl text-base font-medium transition-all duration-300 ease-smooth"
-              >
-                Login
-              </button>
-              <Button
-                variant="primary"
-                size="sm"
-                className="w-full shadow-sm"
-                onClick={() => {
-                  setIsOpen(false);
-                  onSignupClick();
-                }}
-              >
-                Sign Up
-              </Button>
+              {user ? (
+                <>
+                  <span className="block px-4 py-2 text-sm text-text-muted">{user.email}</span>
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      onLogout();
+                    }}
+                    className="w-full text-text-dark hover:text-primary hover:bg-primary/5 block px-4 py-2.5 rounded-xl text-base font-medium transition-all duration-300 ease-smooth"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      onLoginClick();
+                    }}
+                    className="w-full text-text-dark hover:text-primary hover:bg-primary/5 block px-4 py-2.5 rounded-xl text-base font-medium transition-all duration-300 ease-smooth"
+                  >
+                    Login
+                  </button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="w-full shadow-sm"
+                    onClick={() => {
+                      setIsOpen(false);
+                      onSignupClick();
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -81,20 +81,23 @@ function App() {
     
   ]
 
-  if (isAdminView) {
-    return <Dashboard isAdmin />;
-  }
-
   return (
     <div className="app-shell min-h-screen bg-transparent">
-      {/* Navigation */}
       <Navbar
         onNavClick={handleNavClick}
         onLoginClick={() => setCurrentPage('login')}
         onSignupClick={() => setCurrentPage('signup')}
+        user={user}
+        onLogout={handleLogout}
       />
 
-      {currentPage === 'login' && (
+      {isAdminView && (
+        <div className="pt-20">
+          <Dashboard isAdmin />
+        </div>
+      )}
+
+      {!isAdminView && currentPage === 'login' && (
         <div className="page-enter">
           <Login
             onSwitchToSignup={() => setCurrentPage('signup')}
@@ -103,7 +106,7 @@ function App() {
         </div>
       )}
 
-      {currentPage === 'signup' && (
+      {!isAdminView && currentPage === 'signup' && (
         <div className="page-enter">
           <Signup
             onSwitchToLogin={() => setCurrentPage('login')}
@@ -112,7 +115,7 @@ function App() {
         </div>
       )}
 
-      {currentPage === 'home' && (
+      {!isAdminView && currentPage === 'home' && (
         <div className="home-page-background">
       {/* Hero Section */}
       <section
