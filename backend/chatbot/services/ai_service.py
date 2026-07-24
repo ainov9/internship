@@ -1,15 +1,32 @@
 import logging
 from core.openai_client import get_openai_client
+import json
+import os
+
+def load_data():
+    base_dir = os.path.dirname(__file__)  # dossier actuel (services)
+    file_path = os.path.join(base_dir, "data.json")
+
+    with open(file_path, "r") as f:
+        return json.load(f)
+
 
 logger = logging.getLogger(__name__)
+def build_system_prompt(data):
+    return f"""
+             Tu es un assistant IA utile et amical.
+                Réponds toujours en français ou en anglais.
+                    Réponse courte (max 3 lignes).
 
-SYSTEM_PROMPT = (
-    "Tu es un assistant IA utile et amical. "
-    "Réponds toujours en français de manière claire et concise."
-)
+                          Base-toi uniquement sur ces données :
+                                               {data}
+    """
 
+data = load_data()
 
-def get_ai_reply(messages, model="gpt-3.5-turbo", max_tokens=500, temperature=0.7):
+SYSTEM_PROMPT = build_system_prompt(data)
+
+def get_ai_reply(messages, model="gpt-3.5-turbo", max_tokens=100, temperature=0.0001):
     client = get_openai_client()
 
     api_messages = [{"role": "system", "content": SYSTEM_PROMPT}]

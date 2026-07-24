@@ -37,7 +37,7 @@ def send_message(message_text, user_id=1, conversation_id=None):
     )
 
     conversation.save()
-
+ 
     return {
         "conversation_id": str(conversation.id),
         "message": ai_result["content"],

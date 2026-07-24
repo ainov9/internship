@@ -1,12 +1,11 @@
 from rest_framework import serializers
-
-
+#   transforming from json --->py
 class ChatRequestSerializer(serializers.Serializer):
     message = serializers.CharField(max_length=4000, trim_whitespace=True)
     user_id = serializers.IntegerField(default=1)
     conversation_id = serializers.UUIDField(required=False, allow_null=True)
 
-
+#DRF serializer for the response of a chat message
 class MessageSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     role = serializers.CharField()
@@ -14,14 +13,13 @@ class MessageSerializer(serializers.Serializer):
     tokens_used = serializers.IntegerField()
     created_at = serializers.DateTimeField()
 
-
+#DRF serializer for the response of the chat
 class ChatResponseSerializer(serializers.Serializer):
     conversation_id = serializers.CharField()
     message = serializers.CharField()
     tokens_used = serializers.IntegerField()
     model = serializers.CharField()
-
-
+# DRF ser to give detail od respons on admin panel
 class ConversationDetailSerializer(serializers.Serializer):
     conversation_id = serializers.CharField()
     title = serializers.CharField()
