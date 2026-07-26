@@ -49,15 +49,20 @@ export default function Signup({ onSwitchToLogin, onSignupSuccess }) {
     setLoading(true);
     setWelcomeMessage(`Bienvenue ${formData.firstName}! Création du compte en cours...`);
 
-    // Call real backend API to create user
-    // Note: User creation is admin-only in the current backend setup
-    // For now, we'll auto-login with the credentials (assuming user exists)
-    api.auth.login({ username: formData.email, password: formData.password })
+    // Step 1: Register the user
+    api.auth.register({
+      username: formData.email,
+      email: formData.email,
+      password: formData.password,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+    })
+      .then(() => {
+        // Step 2: Login after successful registration
+        return api.auth.login({ username: formData.email, password: formData.password });
+      })
       .then((tokens) => {
-        // Store access token
         api.setAuthToken(tokens.access);
-        
-        // Get current user info
         return api.auth.getCurrentUser();
       })
       .then((user) => {

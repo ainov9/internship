@@ -94,6 +94,11 @@ export const api = {
   
   // Auth endpoints
   auth: {
+    register: (userData) => apiRequest('/users/register/', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+      token: null,
+    }),
     login: (credentials) => apiRequest('/users/api/token/', {
       method: 'POST',
       body: JSON.stringify(credentials),
@@ -175,11 +180,9 @@ export const api = {
   
   // TTS endpoint
   tts: {
-    generate: (text) => apiRequest('/tts/', {
+    generate: (text) => apiRequest('/chatbot/tts/', {
       method: 'POST',
       body: JSON.stringify({ text }),
-      headers: {},
-      responseType: 'arraybuffer',
     }),
   },
   

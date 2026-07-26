@@ -1,17 +1,11 @@
 import logging
 from core.openai_client import get_openai_client
-import json
-import os
-
-def load_data():
-    base_dir = os.path.dirname(__file__)  # dossier actuel (services)
-    file_path = os.path.join(base_dir, "data.json")
-
-    with open(file_path, "r") as f:
-        return json.load(f)
-
+from chatbot.services.data_loader import load_data
+from chatbot.services.context import get_context
 
 logger = logging.getLogger(__name__)
+
+
 def build_system_prompt(data):
     return f"""
              Tu es un assistant IA utile et amical.
@@ -23,8 +17,8 @@ def build_system_prompt(data):
     """
 
 data = load_data()
-
 SYSTEM_PROMPT = build_system_prompt(data)
+
 
 def get_ai_reply(messages, model="gpt-3.5-turbo", max_tokens=100, temperature=0.0001):
     client = get_openai_client()
@@ -49,3 +43,11 @@ def get_ai_reply(messages, model="gpt-3.5-turbo", max_tokens=100, temperature=0.
     except Exception as e:
         logger.error("OpenAI API error: %s", e)
         raise
+
+
+def handle_user_message(user_message):
+    context = get_context(user_message)
+    if context:
+        return context
+    ai_response = get_ai_reply(user_message)
+    return ai_response

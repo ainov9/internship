@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import {
@@ -17,62 +17,18 @@ import StatCard from './StatCard';
 import FaqTable from './FaqTable';
 import AnswerModal from './AnswerModal';
 import DataImportPanel from './DataImportPanel';
+import { api } from '../config/api';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
 
 
-//  exemple data for FAQs to demonstrate the dashboard functionality
-const sampleFaqs = [
-  {
-    id: 1,
-    question: 'How do I reset my password?',
-    answer: 'Use the Forgot Password link on the login page.',
-    category: 'Account',
-    status: 'Answered',
-  },
-  {
-    id: 2,
-    question: 'Can I change my subscription plan?',
-    answer: '',
-    category: 'Billing',
-    status: 'Unanswered',
-  },
-  {
-    id: 3,
-    question: 'Where can I find API documentation?',
-    answer: 'The docs are available in the developer portal.',
-    category: 'Product',
-    status: 'Answered',
-  },
-  {
-    id: 4,
-    question: 'Is there a mobile app available?',
-    answer: '',
-    category: 'General',
-    status: 'Unanswered',
-  },
-];
-// sample query events (timestamp + whether chatbot handled the query)
-const sampleQueries = [
-  { id: 1, date: '2026-01-12', handled: true },
-  { id: 2, date: '2026-01-15', handled: false },
-  { id: 3, date: '2026-02-03', handled: true },
-  { id: 4, date: '2026-02-18', handled: true },
-  { id: 5, date: '2026-03-02', handled: false },
-  { id: 6, date: '2026-03-11', handled: true },
-  { id: 7, date: '2026-04-09', handled: true },
-  { id: 8, date: '2026-04-21', handled: false },
-  { id: 9, date: '2026-05-05', handled: true },
-  { id: 10, date: '2026-05-17', handled: true },
-  { id: 11, date: '2026-06-03', handled: false },
-  { id: 12, date: '2026-06-20', handled: true },
-];
 //partie logique li katdir l'interface dyal dashboard li kayn f admin
 // Dashboard component for managing assistants and FAQs
 function Dashboard({ isAdmin = false }) {
   const [activeItem, setActiveItem] = useState('FAQ Management');
-  const [faqs, setFaqs] = useState(sampleFaqs);
+  const [faqs, setFaqs] = useState([]);
+  const [faqsLoading, setFaqsLoading] = useState(true);
   const [assistants, setAssistants] = useState([
     { id: 'assistant-1', name: 'Support Assistant', purpose: 'Answer customer questions with knowledge base context', createdAt: 'Today' },
   ]);
@@ -82,7 +38,30 @@ function Dashboard({ isAdmin = false }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [lastSavedMessage, setLastSavedMessage] = useState('');
+  const [analytics, setAnalytics] = useState({ answered_faqs: 0, unanswered_faqs: 0, total_faqs: 0 });
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    setFaqsLoading(true);
+    api.dataset.getFAQs()
+      .then((data) => {
+        setFaqs(data || []);
+        setFaqsLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch FAQs:', err);
+        setFaqs([]);
+        setFaqsLoading(false);
+      });
+
+    api.analytics.getSummary()
+      .then((data) => {
+        if (data) setAnalytics(data);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch analytics:', err);
+      });
+  }, []);
   
 
   const answeredFaqCount = useMemo(
@@ -119,49 +98,36 @@ const filteredFaqs = useMemo(() => {
   }), [answeredFaqCount, unansweredFaqCount]);
 
   const queriesPerMonthData = useMemo(() => {
-    // Create month labels covering the range of sampleQueries
-    const dates = sampleQueries.map((q) => new Date(q.date));
-    if (!dates.length) return { labels: [], datasets: [] };
+    if (!faqs.length) return { labels: [], datasets: [] };
 
-    const minDate = new Date(Math.min(...dates.map((d) => d.getTime())));
-    const maxDate = new Date(Math.max(...dates.map((d) => d.getTime())));
-
+    const now = new Date();
     const labels = [];
-    const cursor = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
-    while (cursor <= maxDate) {
-      labels.push(`${cursor.toLocaleString('default', { month: 'short' })} ${cursor.getFullYear()}`);
-      cursor.setMonth(cursor.getMonth() + 1);
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      labels.push(`${d.toLocaleString('default', { month: 'short' })} ${d.getFullYear()}`);
     }
 
-    const handledCounts = labels.map(() => 0);
-    const notHandledCounts = labels.map(() => 0);
+    const answeredCounts = labels.map(() => 0);
+    const unansweredCounts = labels.map(() => 0);
 
-    sampleQueries.forEach((q) => {
-      const d = new Date(q.date);
+    faqs.forEach((faq) => {
+      const d = new Date(faq.created_at || Date.now());
       const label = `${d.toLocaleString('default', { month: 'short' })} ${d.getFullYear()}`;
       const idx = labels.indexOf(label);
       if (idx >= 0) {
-        if (q.handled) handledCounts[idx] += 1;
-        else notHandledCounts[idx] += 1;
+        if (faq.status === 'Answered') answeredCounts[idx] += 1;
+        else unansweredCounts[idx] += 1;
       }
     });
 
     return {
       labels,
       datasets: [
-        {
-          label: 'Handled',
-          data: handledCounts,
-          backgroundColor: '#273840',
-        },
-        {
-          label: 'Not handled',
-          data: notHandledCounts,
-          backgroundColor: '#3c2e23',
-        },
+        { label: 'Handled', data: answeredCounts, backgroundColor: '#273840' },
+        { label: 'Not handled', data: unansweredCounts, backgroundColor: '#3c2e23' },
       ],
     };
-  }, []);
+  }, [faqs]);
 
 
 
@@ -191,14 +157,33 @@ const filteredFaqs = useMemo(() => {
   const handleAnswerSave = (answer) => {
     if (!selectedFaq) return;
 
+    const updatedFaq = {
+      ...selectedFaq,
+      answer,
+      status: answer.trim() ? 'Answered' : 'Unanswered',
+    };
+
+    // Persist to backend
+    if (selectedFaq.id && !String(selectedFaq.id).startsWith('import-') && !String(selectedFaq.id).startsWith('new')) {
+      api.dataset.getFAQ(selectedFaq.id)
+        .then(() => {
+          // FAQ exists, update it via the detail endpoint
+          return fetch(`${api.baseUrl}/dataset/faq/${selectedFaq.id}/`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedFaq),
+          });
+        })
+        .catch(() => {})
+        .then(() => {});
+    }
+
     setFaqs((current) =>
       current.map((item) =>
-        item.id === selectedFaq.id
-          ? { ...item, answer, status: answer.trim() ? 'Answered' : 'Unanswered' }
-          : item,
+        item.id === selectedFaq.id ? updatedFaq : item,
       ),
     );
-    setLastSavedMessage(`Updated answer for “${selectedFaq.question}”.`);
+    setLastSavedMessage(`Updated answer for "${selectedFaq.question}".`);
     setSelectedFaq(null);
   };
 
@@ -248,9 +233,9 @@ const filteredFaqs = useMemo(() => {
               transition={{ duration: 0.3 }}
               className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
             >
-              <StatCard label="Answered FAQs" value={`${answeredFaqCount}`} icon="✅" trend="+12.4%" trendDirection="up" />
+              <StatCard label="Answered FAQs" value={`${analytics.answered_faqs || answeredFaqCount}`} icon="✅" trend="+12.4%" trendDirection="up" />
               <StatCard label="Total Users" value="12.8k" icon="👥" trend="+8.2%" trendDirection="up" />
-              <StatCard label="Queries Handled" value={`${totalFaqCount}`} icon="💬" trend="+12.4%" trendDirection="up" />
+              <StatCard label="Queries Handled" value={`${analytics.total_faqs || totalFaqCount}`} icon="💬" trend="+12.4%" trendDirection="up" />
               <StatCard label="Avg Response Time" value="1.4s" icon="⚡" trend="-0.3s" trendDirection="down" />
               <StatCard label="Unanswered FAQs" value={`${unansweredFaqCount}`} icon="❌" trend="-5.1%" trendDirection="down" />
             </motion.div>

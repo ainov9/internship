@@ -1,7 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+import { api } from '../config/api';
 
 /* ============================================================
    Animated typing dots – three pulsing dots in sequence
@@ -218,35 +217,15 @@ export default function ChatBubble() {
     }, 100);
 
     try {
-      // ✅ APPPEL FETCH DIRECT vers /api/chatbot/chat/
-      const response = await fetch(`${API_BASE_URL}/chatbot/chat/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Ajoutez le token si l'utilisateur est connecté
-          ...(localStorage.getItem('token') && {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          })
-        },
-        body: JSON.stringify({
-          message: input.trim(),
-          user_id: 1 // ou utiliser l'ID utilisateur réel
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      // ✅ APPPEL via le client API centralisé
+      const data = await api.chat.sendMessage(input.trim(), 1);
 
       setShowTyping(false);
       var replyDate = new Date();
       var botMsg = {
         id: 'bot-' + Date.now(),
         from: 'bot',
-        text: data.message || data.reply || 'No response received',
+        text: (data && (data.message || data.reply)) || 'No response received',
         seenAt: null,
       };
       setMessages(function (m) { return m.concat([botMsg]); });
@@ -285,17 +264,7 @@ export default function ChatBubble() {
   // ✅ NOUVELLE FONCTION: Récupérer l'historique d'une conversation
   var fetchConversationHistory = async function (conversationId) {
     try {
-      const response = await fetch(`${API_BASE_URL}/chatbot/conversations/${conversationId}/history/`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch conversation history');
-      }
-
-      return await response.json();
+      return await api.chat.getConversationHistory(conversationId);
     } catch (error) {
       console.error('Error fetching conversation history:', error);
       return [];
@@ -393,13 +362,13 @@ export default function ChatBubble() {
 
   var generateAndStoreAudio = async function (msg) {
     try {
-      // ✅ APPPEL FETCH DIRECT vers /api/tts/
-      const response = await fetch(`${API_BASE_URL}/tts/`, {
+      // ✅ APPPEL via le client API centralisé
+      const response = await fetch(`${api.baseUrl}/chatbot/tts/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(localStorage.getItem('token') && {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          ...(api.getAuthToken() && {
+            'Authorization': `Bearer ${api.getAuthToken()}`
           })
         },
         body: JSON.stringify({ text: msg.text })
