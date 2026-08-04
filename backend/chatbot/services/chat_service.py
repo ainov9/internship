@@ -1,3 +1,5 @@
+import json
+
 from chatbot.models import Conversation, Message
 from chatbot.services.ai_service import get_ai_reply
 
@@ -28,6 +30,7 @@ def send_message(message_text, user_id=1, conversation_id=None):
     )
 
     ai_result = get_ai_reply(history)
+    reply = json.loads(ai_result["content"])
 
     Message.objects.create(
         conversation=conversation,
@@ -40,7 +43,7 @@ def send_message(message_text, user_id=1, conversation_id=None):
  
     return {
         "conversation_id": str(conversation.id),
-        "message": ai_result["content"],
+        "message": reply,
         "tokens_used": ai_result["tokens_used"],
         "model": ai_result["model"],
     }

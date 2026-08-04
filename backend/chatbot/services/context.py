@@ -3,21 +3,23 @@ from chatbot.services.data_loader import load_data
 
 def get_context(user_message):
     data = load_data()
-    question = user_message.lower()
-
+    question = (user_message or "").casefold()
     results = []
 
-    for produit in data["catalogue"]:
+    for product in data.get("catalogue", []):
         if (
-            produit["nom"].lower() in question
-            or produit["categorie"].lower() in question
-            or str(produit["prix"]) in question
-            or str(produit["stock"]) in question
+            str(product.get("nom", "")).casefold() in question
+            or str(product.get("categorie", "")).casefold() in question
+            or str(product.get("prix", "")) in question
+            or str(product.get("stock", "")).casefold() in question
         ):
-            results.append(
-                f"{produit['nom']} ({produit['prix']}€, stock: {produit['stock']})"
-            )
+            result = f"{product.get('nom', '')} ({product.get('prix', '')}€, stock: {product.get('stock', '')})"
+            if "image" in product:
+                result += f" [image: {product['image']}]"
+            results.append(result)
 
-    if results:
-        return "\n".join(results)
-    return ""
+    for keyword, answer in data.get("faq", {}).items():
+        if keyword.casefold() in question:
+            results.append(answer)
+
+    return "\n".join(results) if results else "Aucune information trouvée"

@@ -1,3 +1,7 @@
+import mimetypes
+import os
+
+from django.http import FileResponse, Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,6 +13,14 @@ from chatbot.serializers import (
     ConversationListSerializer,
 )
 from chatbot.services import chat_service
+
+
+def product_image(request, filename):
+    image_path = os.path.join(os.path.dirname(__file__), 'services', 'image', filename)
+    if os.path.basename(image_path) != filename or not os.path.isfile(image_path):
+        raise Http404
+    content_type = mimetypes.guess_type(image_path)[0] or 'application/octet-stream'
+    return FileResponse(open(image_path, 'rb'), content_type=content_type)
 
 
 class ChatView(APIView):

@@ -16,7 +16,7 @@ class MessageSerializer(serializers.Serializer):
 #DRF serializer for the response of the chat
 class ChatResponseSerializer(serializers.Serializer):
     conversation_id = serializers.CharField()
-    message = serializers.CharField()
+    message = serializers.JSONField()
     tokens_used = serializers.IntegerField()
     model = serializers.CharField()
 # DRF ser to give detail od respons on admin panel

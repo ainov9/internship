@@ -1,6 +1,25 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../config/api';
+import { api, API_BASE_URL } from '../config/api';
+
+const getProductImageUrl = (image) => {
+  if (!image || /^https?:\/\//i.test(image)) return image;
+  if (API_BASE_URL !== '/api' && image.startsWith('/api/')) {
+    return `${API_BASE_URL}${image.slice('/api'.length)}`;
+  }
+  return image;
+};
+
+const handleSend = async (text) => {
+  try {
+    // Calls POST /api/chatbot/chat/
+    const response = await api.chat.sendMessage(text, userId); 
+    console.log(response);
+  } catch (error) {
+    // Fallback or error handling
+  }
+};
+
 
 /* ============================================================
    Animated typing dots – three pulsing dots in sequence
@@ -222,10 +241,18 @@ export default function ChatBubble() {
 
       setShowTyping(false);
       var replyDate = new Date();
+      var reply = data && (data.message || data.reply);
+      if (typeof reply === 'string') {
+        try { reply = JSON.parse(reply); } catch (_e) { reply = { text: reply }; }
+      }
       var botMsg = {
         id: 'bot-' + Date.now(),
         from: 'bot',
-        text: (data && (data.message || data.reply)) || 'No response received',
+        text: (reply && reply.text) || 'No response received',
+        product: reply && reply.product && {
+          ...reply.product,
+          image: getProductImageUrl(reply.product.image),
+        },
         seenAt: null,
       };
       setMessages(function (m) { return m.concat([botMsg]); });
@@ -518,6 +545,18 @@ export default function ChatBubble() {
                           <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
                             {m.text}
                           </p>
+                          {m.from === 'bot' && m.product && m.product.image && (
+                            <div className="mt-2">
+                              <img
+                                src={m.product.image}
+                                alt={m.product.name || 'Product'}
+                                className="w-full max-w-[240px] rounded-lg object-cover"
+                              />
+                              {m.product.name && (
+                                <p className="mt-1 text-xs font-medium text-gray-600">{m.product.name}</p>
+                              )}
+                            </div>
+                          )}
                           {m.from === 'bot' && !m.isTyping && (
                             <div className="flex items-center justify-end gap-0.5 mt-2 -mr-1">
                               <IconBtn onClick={function () { playMessageAudio(m); }} label="Play audio" title="Play audio">
