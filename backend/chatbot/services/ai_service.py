@@ -16,6 +16,7 @@ Base-toi uniquement sur ces données.
 Retourne toujours uniquement un objet JSON valide, sans markdown ni explication.
 Sans produit avec une image dans le contexte : {{"text": "..."}}.
 Avec un produit avec une image : {{"text": "...", "product": {{"name": "...", "image": "..."}}}}.
+Avec plusieurs produits avec une image : {{"text": "...", "products": [{{"name": "...", "image": "..."}}]}}.
 Le texte doit être concis et contenir au maximum deux lignes.
 
 Données : {data}
@@ -25,19 +26,31 @@ Données : {data}
 SYSTEM_PROMPT = build_system_prompt(data)
 
 
-def _product_for_message(message):
+def _products_for_message(message):
     question = (message or "").casefold()
-    for product in data.get("catalogue", []):
+    catalogue = data.get("catalogue", [])
+    exact_products = [
+        product for product in catalogue
+        if str(product.get("nom", "")).casefold() in question and "image" in product
+    ]
+    if exact_products:
+        return exact_products
+
+    products = []
+    for product in catalogue:
         name = str(product.get("nom", ""))
         category = str(product.get("categorie", ""))
-        name_words = [word for word in name.casefold().split() if len(word) > 3]
+        # Keep useful short product tokens such as "PC", while ignoring
+        # one-letter words that would create false matches.
+        name_words = [word for word in name.casefold().split() if len(word) >= 2]
         if (
             name.casefold() in question
             or category.casefold() in question
             or any(word in question for word in name_words)
         ):
-            return product
-    return None
+            if "image" in product:
+                products.append(product)
+    return products
 
 
 def _short_text(value):
@@ -56,16 +69,19 @@ def format_response(content, user_message):
         pass
 
     response = {"text": _short_text(parsed.get("text", content))}
-    product = _product_for_message(user_message)
-    if product and "image" in product:
-        response["product"] = {
-            "name": product.get("nom", ""),
-            "image": product["image"],
-        }
+    products = _products_for_message(user_message)
+    formatted_products = [
+        {"name": product.get("nom", ""), "image": product["image"]}
+        for product in products
+    ]
+    if len(formatted_products) == 1:
+        response["product"] = formatted_products[0]
+    elif formatted_products:
+        response["products"] = formatted_products
     return json.dumps(response, ensure_ascii=False)
 
 
-def get_ai_reply(messages, model="gpt-3.5-turbo", max_tokens=100, temperature=0.2):
+def get_ai_reply(messages, model="gpt-3.5-turbo", max_tokens=100, temperature=0.6):
     last_user_msg = ""
     for msg in reversed(messages):
         if msg["role"] == "user":

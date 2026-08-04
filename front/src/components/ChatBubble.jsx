@@ -245,14 +245,16 @@ export default function ChatBubble() {
       if (typeof reply === 'string') {
         try { reply = JSON.parse(reply); } catch (_e) { reply = { text: reply }; }
       }
+      var products = reply && reply.products
+        ? reply.products
+        : (reply && reply.product ? [reply.product] : []);
       var botMsg = {
         id: 'bot-' + Date.now(),
         from: 'bot',
         text: (reply && reply.text) || 'No response received',
-        product: reply && reply.product && {
-          ...reply.product,
-          image: getProductImageUrl(reply.product.image),
-        },
+        products: products.map(function (product) {
+          return { ...product, image: getProductImageUrl(product.image) };
+        }),
         seenAt: null,
       };
       setMessages(function (m) { return m.concat([botMsg]); });
@@ -545,16 +547,24 @@ export default function ChatBubble() {
                           <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
                             {m.text}
                           </p>
-                          {m.from === 'bot' && m.product && m.product.image && (
+                          {m.from === 'bot' && m.products && m.products.length > 0 && (
                             <div className="mt-2">
-                              <img
-                                src={m.product.image}
-                                alt={m.product.name || 'Product'}
-                                className="w-full max-w-[240px] rounded-lg object-cover"
-                              />
-                              {m.product.name && (
-                                <p className="mt-1 text-xs font-medium text-gray-600">{m.product.name}</p>
-                              )}
+                              <div className="grid grid-cols-2 gap-2">
+                                {m.products.map(function (product, index) {
+                                  return (
+                                    <div key={(product.name || 'product') + index}>
+                                      <img
+                                        src={product.image}
+                                        alt={product.name || 'Product'}
+                                        className="w-full max-w-[240px] rounded-lg object-cover"
+                                      />
+                                      {product.name && (
+                                        <p className="mt-1 text-xs font-medium text-gray-600">{product.name}</p>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             </div>
                           )}
                           {m.from === 'bot' && !m.isTyping && (
