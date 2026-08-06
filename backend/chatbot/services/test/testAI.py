@@ -64,6 +64,49 @@ def test_ordinateur_and_pc_return_two_products():
     }
 
 
+def test_classify_empty_context_as_unanswered():
+    result = ai_service.classify_response("Quel est le délai ?", "Je ne sais pas.", "")
+    assert result["status"] == "unanswered"
+    assert result["suggested_category"] == "other"
+    assert set(result) == {
+        "question", "status", "reason", "timestamp", "suggested_category"
+    }
+
+
+def test_classify_supported_product_as_answered():
+    result = ai_service.classify_response(
+        "Quel est le prix du PC Gamer ?",
+        '{"text":"Le PC Gamer coûte 1200€.","product":{"name":"PC Gamer","image":"/api/chatbot/images/gamer.png"}}',
+        "PC Gamer (1200€, stock: disponible)",
+    )
+    assert result == {"status": "answered"}
+
+
+def test_save_unanswered_question_to_json(monkeypatch, tmp_path):
+    output_path = tmp_path / "unanswered_questions.json"
+    monkeypatch.setattr(ai_service, "UNANSWERED_QUESTIONS_PATH", output_path)
+    record = ai_service.classify_response("Quel est le délai ?", "Je ne sais pas.", "")
+
+    ai_service.save_unanswered_question(record)
+
+    stored = json.loads(output_path.read_text(encoding="utf-8"))
+    assert stored == [record]
+
+
+def test_save_unanswered_question_ignores_non_uncertainty(monkeypatch, tmp_path):
+    output_path = tmp_path / "unanswered_questions.json"
+    monkeypatch.setattr(ai_service, "UNANSWERED_QUESTIONS_PATH", output_path)
+    record = {
+        "question": "Question hors contexte",
+        "status": "unanswered",
+        "reason": "Aucune information pertinente dans le contexte.",
+    }
+
+    ai_service.save_unanswered_question(record)
+
+    assert not output_path.exists()
+
+
 def test_tokens_used_does_not_exceed_the_100_cap(monkeypatch):
     fake_client = _make_fake_client(total_tokens=95)
     monkeypatch.setattr(ai_service, "get_openai_client", lambda: fake_client)

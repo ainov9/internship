@@ -1,0 +1,79 @@
+[
+  {
+    "question": "prix de  leau",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-05T12:11:36.744778+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "hello",
+    "status": "unanswered",
+    "reason": "Aucune information pertinente dans le contexte.",
+    "timestamp": "2026-08-05T12:28:40.368128+00:00",
+    "suggested_category": "other"
+  },
+  {
+    "question": "give me suggestion about computers",
+    "status": "unanswered",
+    "reason": "Aucune information pertinente dans le contexte.",
+    "timestamp": "2026-08-05T12:29:10.618931+00:00",
+    "suggested_category": "other"
+  },
+  {
+    "question": "i want to see the product of 899",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-05T12:34:13.547894+00:00",
+    "suggested_category": "other"
+  },
+  {
+    "question": "ordinateur",
+    "status": "unanswered",
+    "reason": "Aucune information pertinente dans le contexte.",
+    "timestamp": "2026-08-05T12:34:31.718265+00:00",
+    "suggested_category": "product"
+  },
+  {
+    "question": "what is the price of  usb",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-05T12:47:29.045775+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix de tele",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-06T13:48:08.420179+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix ordinateure",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-06T13:48:16.721462+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix de usb",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-06T13:48:30.668531+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix de usb",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-06T13:49:17.835034+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix de usb\"",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-06T13:50:07.778742+00:00",
+    "suggested_category": "pricing"
+  }
+]

@@ -1,7 +1,13 @@
 import json
 
 from chatbot.models import Conversation, Message
-from chatbot.services.ai_service import get_ai_reply
+from chatbot.services.ai_service import (
+    classify_response,
+    get_ai_reply,
+    save_unanswered_question,
+)
+from chatbot.services.context import get_context
+from chatbot.services.question_tracker import track_question
 
 
 def get_or_create_conversation(conversation_id=None, user_id=1):
@@ -31,6 +37,13 @@ def send_message(message_text, user_id=1, conversation_id=None):
 
     ai_result = get_ai_reply(history)
     reply = json.loads(ai_result["content"])
+    classification = classify_response(
+        message_text,
+        reply,
+        get_context(message_text),
+    )
+    save_unanswered_question(classification)
+    tracking = track_question(message_text)
 
     Message.objects.create(
         conversation=conversation,
@@ -44,6 +57,8 @@ def send_message(message_text, user_id=1, conversation_id=None):
     return {
         "conversation_id": str(conversation.id),
         "message": reply,
+        "classification": classification,
+        "tracking": tracking,
         "tokens_used": ai_result["tokens_used"],
         "model": ai_result["model"],
     }

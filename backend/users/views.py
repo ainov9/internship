@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.serializers import RegisterSerializer, UserSerializer
+from users.permissions import IsStaffUser
 
 
 class RegisterView(APIView):
@@ -18,14 +19,14 @@ class RegisterView(APIView):
 
 
 class CurrentUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsStaffUser]
 
     def get(self, request):
         return Response(UserSerializer(request.user).data)
 
 
 class UserListView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def get(self, request):
         users = User.objects.all().order_by('-date_joined')
@@ -34,7 +35,7 @@ class UserListView(APIView):
 
 
 class UserCreateView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)

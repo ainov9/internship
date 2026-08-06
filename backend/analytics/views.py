@@ -1,7 +1,7 @@
 from django.db.models import Count, Q
 from django.utils import timezone
 from datetime import timedelta
-from rest_framework.permissions import AllowAny
+from users.permissions import IsStaffUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,7 +11,7 @@ from datasets.models import FAQ
 
 
 class AnalyticsSummaryView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def get(self, request):
         total_faqs = FAQ.objects.count()
@@ -30,7 +30,7 @@ class AnalyticsSummaryView(APIView):
 
 
 class QueryLogListView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def get(self, request):
         logs = QueryLog.objects.all()[:100]
@@ -39,7 +39,7 @@ class QueryLogListView(APIView):
 
 
 class UserAnalyticsView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def get(self, request):
         total_queries = QueryLog.objects.count()

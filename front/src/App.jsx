@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Navbar, Hero, Card, Button, Footer, ChatBubble, Login, Signup, Dashboard } from './components'
+import { Navbar, Hero, Card, Button, Footer, ChatBubble, Login, Dashboard } from './components'
+import api from './config/api'
 import './App.css'
 
 function App() {
   // Main App component - Manages routing between pages (home, login, signup) and user authentication state
-  const [currentPage, setCurrentPage] = useState('home'); // 'home', 'login', 'signup'
+  const [currentPage, setCurrentPage] = useState('home');
   const [user, setUser] = useState(null);   // ona donner l'email dyal user li kay login wla kay signup
   const [pendingScrollTarget, setPendingScrollTarget] = useState(null);// ona l'element li bghina nscrolliw lih ila kan l'page li kayn daba hiya home
   const [isAdminView, setIsAdminView] = useState(false);
@@ -40,25 +41,22 @@ function App() {
   };
 
   const handleAdminEnter = () => {
-    setIsAdminView(true);
+    if (user?.is_staff) setIsAdminView(true);
+    else setCurrentPage('login');
   };
 
-  const handleLoginSuccess = (email) => {
-// Called after successful login: stores user email in state and redirects to home page
-    setUser({ email });
+  const handleLoginSuccess = (authenticatedUser) => {
+    setUser(authenticatedUser);
     setCurrentPage('home');
-  };
-
-  const handleSignupSuccess = (email) => {
-// Called after successful signup: stores user email in state and redirects to home page
-    setUser({ email });
-    setCurrentPage('home');
+    setIsAdminView(Boolean(authenticatedUser?.is_staff));
   };
 
   const handleLogout = () => {
     
 // Clears user session and redirects to home page
     setUser(null);
+    api.removeAuthToken();
+    setIsAdminView(false);
     setCurrentPage('home');
   };
 
@@ -86,7 +84,6 @@ function App() {
       <Navbar
         onNavClick={handleNavClick}
         onLoginClick={() => setCurrentPage('login')}
-        onSignupClick={() => setCurrentPage('signup')}
         user={user}
         onLogout={handleLogout}
       />
@@ -100,17 +97,7 @@ function App() {
       {!isAdminView && currentPage === 'login' && (
         <div className="page-enter">
           <Login
-            onSwitchToSignup={() => setCurrentPage('signup')}
             onLoginSuccess={handleLoginSuccess}
-          />
-        </div>
-      )}
-
-      {!isAdminView && currentPage === 'signup' && (
-        <div className="page-enter">
-          <Signup
-            onSwitchToLogin={() => setCurrentPage('login')}
-            onSignupSuccess={handleSignupSuccess}
           />
         </div>
       )}

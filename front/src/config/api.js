@@ -74,11 +74,6 @@ export const api = {
   baseUrl: API_BASE_URL,
   
   auth: {
-    register: (userData) => apiRequest('/users/register/', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-      token: null,
-    }),
     login: (credentials) => apiRequest('/users/api/token/', {
       method: 'POST',
       body: JSON.stringify(credentials),

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import Button from './Button';
 
-export default function Navbar({ onNavClick, onLoginClick, onSignupClick, user, onLogout }) {
+export default function Navbar({ onNavClick, onLoginClick, user, onLogout }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -79,14 +78,6 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick, user, 
                 >
                   Login
                 </button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={onSignupClick}
-                  className="shadow-sm hover:shadow-glow transition-shadow duration-300"
-                >
-                  Sign Up
-                </Button>
               </>
             )}
           </div>
@@ -164,17 +155,6 @@ export default function Navbar({ onNavClick, onLoginClick, onSignupClick, user, 
                   >
                     Login
                   </button>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="w-full shadow-sm"
-                    onClick={() => {
-                      setIsOpen(false);
-                      onSignupClick();
-                    }}
-                  >
-                    Sign Up
-                  </Button>
                 </>
               )}
             </div>

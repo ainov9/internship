@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from users.permissions import IsStaffUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,7 +8,7 @@ from datasets.serializers import FAQSerializer, DocumentSerializer
 
 
 class FAQListView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def get(self, request):
         faqs = FAQ.objects.all()
@@ -23,7 +23,7 @@ class FAQListView(APIView):
 
 
 class FAQDetailView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def get(self, request, faq_id):
         try:
@@ -52,7 +52,7 @@ class FAQDetailView(APIView):
 
 
 class DocumentListView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def get(self, request):
         docs = Document.objects.all()
@@ -61,7 +61,7 @@ class DocumentListView(APIView):
 
 
 class DocumentUploadView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def post(self, request):
         serializer = DocumentSerializer(data=request.data)
@@ -71,7 +71,7 @@ class DocumentUploadView(APIView):
 
 
 class DocumentDeleteView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def delete(self, request, document_id):
         try:
@@ -83,7 +83,7 @@ class DocumentDeleteView(APIView):
 
 
 class DatasetSearchView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsStaffUser]
 
     def post(self, request):
         query = request.data.get('query', '').strip().lower()

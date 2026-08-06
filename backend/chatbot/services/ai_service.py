@@ -1,12 +1,16 @@
 import json
 import logging
 import os
+import re
+from datetime import datetime, timezone
+from pathlib import Path
 
 from core.openai_client import get_openai_client
 from chatbot.services.data_loader import load_data
 
 logger = logging.getLogger(__name__)
 data = load_data()
+UNANSWERED_QUESTIONS_PATH = Path(__file__).with_name("unanswered_questions.json")
 
 
 def build_system_prompt(data):
@@ -24,6 +28,96 @@ Données : {data}
 
 
 SYSTEM_PROMPT = build_system_prompt(data)
+
+
+UNCERTAINTY_PATTERNS = (
+    "i don't know",
+    "i do not know",
+    "not sure",
+    "no information",
+    "je ne sais pas",
+    "aucune information",
+    "je ne suis pas sûr",
+    "je ne suis pas certain",
+)
+
+
+def _classification_category(question):
+    question = (question or "").casefold()
+    if any(word in question for word in ("prix", "coût", "cout", "tarif", "price")):
+        return "pricing"
+    if any(word in question for word in ("erreur", "problème", "probleme", "installation", "bug")):
+        return "technical"
+    if _products_for_message(question):
+        return "product"
+    return "other"
+
+
+def classify_response(question, response, context):
+    """Classify whether a generated answer is supported by the supplied context."""
+    timestamp = datetime.now(timezone.utc).isoformat()
+    response_data = response
+    if isinstance(response, str):
+        try:
+            response_data = json.loads(response)
+        except json.JSONDecodeError:
+            response_data = {"text": response}
+
+    answer_text = str(response_data.get("text", "")) if isinstance(response_data, dict) else str(response_data or "")
+    context_text = json.dumps(context, ensure_ascii=False) if isinstance(context, (dict, list)) else str(context or "")
+    normalized_answer = answer_text.casefold().strip()
+    context_is_empty = not context_text.strip() or context_text.casefold().strip() in {
+        "aucune information trouvée",
+        "no information",
+    }
+    uncertain = any(pattern in normalized_answer for pattern in UNCERTAINTY_PATTERNS)
+
+    product_context = _products_for_message(question)
+    product_addressed = not product_context or any(
+        str(product.get("nom", "")).casefold() in normalized_answer
+        for product in product_context
+    )
+    directly_answered = bool(answer_text) and product_addressed
+
+    if context_is_empty or uncertain or not directly_answered:
+        reason = "Aucune information pertinente dans le contexte."
+        if uncertain:
+            reason = "La réponse exprime une incertitude."
+        elif not directly_answered:
+            reason = "La réponse ne traite pas directement la question."
+        return {
+            "question": question,
+            "status": "unanswered",
+            "reason": reason,
+            "timestamp": timestamp,
+            "suggested_category": _classification_category(question),
+        }
+
+    return {"status": "answered"}
+
+
+def save_unanswered_question(classification):
+    """Append only responses that explicitly express uncertainty."""
+    if (
+        classification.get("status") != "unanswered"
+        or classification.get("reason") != "La réponse exprime une incertitude."
+    ):
+        return
+
+    records = []
+    if UNANSWERED_QUESTIONS_PATH.exists():
+        try:
+            stored = json.loads(UNANSWERED_QUESTIONS_PATH.read_text(encoding="utf-8"))
+            if isinstance(stored, list):
+                records = stored
+        except (OSError, json.JSONDecodeError):
+            records = []
+
+    records.append(classification)
+    UNANSWERED_QUESTIONS_PATH.write_text(
+        json.dumps(records, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 def _products_for_message(message):
@@ -81,7 +175,7 @@ def format_response(content, user_message):
     return json.dumps(response, ensure_ascii=False)
 
 
-def get_ai_reply(messages, model="gpt-3.5-turbo", max_tokens=100, temperature=0.6):
+def get_ai_reply(messages, model="gpt-3.5-turbo", max_tokens=100, temperature=0.8):
     last_user_msg = ""
     for msg in reversed(messages):
         if msg["role"] == "user":

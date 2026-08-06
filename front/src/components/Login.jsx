@@ -2,8 +2,8 @@ import { useState } from 'react';
 import Button from './Button';
 import { api } from '../config/api';
 
-export default function Login({ onSwitchToSignup, onLoginSuccess }) {
-  const [email, setEmail] = useState('');
+export default function Login({ onLoginSuccess }) {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,21 +14,16 @@ export default function Login({ onSwitchToSignup, onLoginSuccess }) {
     setError('');
     setWelcomeMessage('');
 
-    if (!email || !password) {
+    if (!username || !password) {
       setError('Please fill in all fields');
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Please enter a valid email address');
-      return;
-    }
-
     setLoading(true);
-    setWelcomeMessage(`Bienvenue ${email.split('@')[0]} ! Connexion en cours...`);
+    setWelcomeMessage(`Bienvenue ${username} ! Connexion en cours...`);
 
     // Call real backend API for JWT token
-    api.auth.login({ username: email, password })
+    api.auth.login({ username, password })
       .then((tokens) => {
         // Store access token
         api.setAuthToken(tokens.access);
@@ -38,7 +33,7 @@ export default function Login({ onSwitchToSignup, onLoginSuccess }) {
       })
       .then((user) => {
         setLoading(false);
-        onLoginSuccess(user.email || email);
+        onLoginSuccess(user);
       })
       .catch((error) => {
         setLoading(false);
@@ -81,14 +76,14 @@ export default function Login({ onSwitchToSignup, onLoginSuccess }) {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-text-dark mb-2">
-                Email Address
+              <label htmlFor="username" className="block text-sm font-medium text-text-dark mb-2">
+                Username
               </label>
               <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="you@gmail.com"
                 className="w-full px-4 py-3 bg-white/60 border border-gray-200/60 rounded-2xl focus:outline-none smooth-focus transition-all duration-300 ease-smooth hover:border-gray-300"
                 required
@@ -157,18 +152,6 @@ export default function Login({ onSwitchToSignup, onLoginSuccess }) {
             </button>
           </div>
 
-          {/* Sign Up Link */}
-          <div className="text-center">
-            <p className="text-text-muted text-sm">
-              Don't have an account?{' '}
-              <button
-                onClick={onSwitchToSignup}
-                className="text-primary hover:text-accent-indigo font-semibold transition-colors duration-300"
-              >
-                Sign up
-              </button>
-            </p>
-          </div>
         </div>
 
         {/* Footer */}
