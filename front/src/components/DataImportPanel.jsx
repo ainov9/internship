@@ -81,6 +81,7 @@ function DataImportPanel({ onImport }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [detectedType, setDetectedType] = useState(null);
   const [previewRows, setPreviewRows] = useState([]);
+  const [parsedRows, setParsedRows] = useState([]);
   const [previewFields, setPreviewFields] = useState([]);
   const [statusMessage, setStatusMessage] = useState('');
   const [isParsing, setIsParsing] = useState(false);
@@ -121,11 +122,13 @@ function DataImportPanel({ onImport }) {
       }
 
       setPreviewRows(parsed.rows.slice(0, 5));
+      setParsedRows(parsed.rows);
       setPreviewFields(parsed.fields);
       setStatusMessage(`Parsed ${parsed.rows.length} row(s). Review the mapping before importing.`);
     } catch (error) {
       setStatusMessage(error.message || 'Unable to parse the selected file.');
       setPreviewRows([]);
+      setParsedRows([]);
       setPreviewFields([]);
     } finally {
       setIsParsing(false);
@@ -138,7 +141,7 @@ function DataImportPanel({ onImport }) {
       return;
     }
 
-    onImport({ fileName: selectedFile.name, detectedType, rows: previewRows, mapping });
+    onImport({ file: selectedFile, fileName: selectedFile.name, detectedType, rows: parsedRows, mapping });
     setStatusMessage('Import ready. FAQ data will be used for the dashboard.');
   };
 

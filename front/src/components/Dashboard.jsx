@@ -168,11 +168,7 @@ const filteredFaqs = useMemo(() => {
       api.dataset.getFAQ(selectedFaq.id)
         .then(() => {
           // FAQ exists, update it via the detail endpoint
-          return fetch(`${api.baseUrl}/dataset/faq/${selectedFaq.id}/`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedFaq),
-          });
+          return api.dataset.updateFAQ(selectedFaq.id, updatedFaq);
         })
         .catch(() => {})
         .then(() => {});
@@ -187,7 +183,7 @@ const filteredFaqs = useMemo(() => {
     setSelectedFaq(null);
   };
 
-  const handleImport = ({ rows, mapping }) => {
+  const handleImport = async ({ file, fileName, rows, mapping }) => {
     const importedFaqs = rows
       .map((row, index) => {
         const question = row[mapping.question] || row.question || '';
@@ -207,8 +203,16 @@ const filteredFaqs = useMemo(() => {
       .filter(Boolean);
 
     if (importedFaqs.length) {
-      setFaqs((current) => [...importedFaqs, ...current]);
-      setLastSavedMessage(`Imported ${importedFaqs.length} FAQ entries from your file.`);
+      try {
+        if (file) await api.dataset.uploadDocument(file, fileName);
+        const savedFaqs = await Promise.all(
+          importedFaqs.map(({ id, ...faq }) => api.dataset.createFAQ(faq)),
+        );
+        setFaqs((current) => [...savedFaqs, ...current]);
+        setLastSavedMessage(`Imported ${savedFaqs.length} FAQ entries into the backend dataset.`);
+      } catch (error) {
+        setLastSavedMessage(`Dataset upload failed: ${error.message}`);
+      }
     }
   };
 

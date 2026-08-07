@@ -35,9 +35,13 @@ const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   const token = options.token || getAuthToken();
   
+  const headers = getHeaders(token);
+  if (options.body instanceof FormData) {
+    delete headers['Content-Type'];
+  }
   const defaultOptions = {
-    headers: getHeaders(token),
     ...options,
+    headers: { ...headers, ...(options.headers || {}) },
   };
   
   try {
@@ -108,7 +112,15 @@ export const api = {
   
   dataset: {
     getFAQs: () => apiRequest('/dataset/faq/'),
+    createFAQ: (faq) => apiRequest('/dataset/faq/', {
+      method: 'POST',
+      body: JSON.stringify(faq),
+    }),
     getFAQ: (faqId) => apiRequest(`/dataset/faq/${faqId}/`),
+    updateFAQ: (faqId, faq) => apiRequest(`/dataset/faq/${faqId}/`, {
+      method: 'PUT',
+      body: JSON.stringify(faq),
+    }),
     getDocuments: () => apiRequest('/dataset/documents/'),
     getDocument: (documentId) => apiRequest(`/dataset/documents/${documentId}/`),
     uploadDocument: (file, title) => {

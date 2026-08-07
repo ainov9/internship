@@ -75,5 +75,54 @@
     "reason": "La réponse exprime une incertitude.",
     "timestamp": "2026-08-06T13:50:07.778742+00:00",
     "suggested_category": "pricing"
+  },
+  {
+    "question": "usb price",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-07T14:03:11.506289+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "usb price",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-07T14:03:17.290410+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "usb price",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-07T14:03:24.557282+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix de leau",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-07T14:03:34.425863+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix de leau",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-07T14:03:37.353924+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix de leau",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-07T14:03:40.251412+00:00",
+    "suggested_category": "pricing"
+  },
+  {
+    "question": "prix de leau",
+    "status": "unanswered",
+    "reason": "La réponse exprime une incertitude.",
+    "timestamp": "2026-08-07T14:03:45.846295+00:00",
+    "suggested_category": "pricing"
   }
 ]

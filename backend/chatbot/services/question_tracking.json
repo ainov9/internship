@@ -1,7 +1,7 @@
 [
   {
     "question": "prix de tele",
-    "count": 1
+    "count": 5
   },
   {
     "question": "prix ordinateure",
@@ -10,5 +10,9 @@
   {
     "question": "prix de usb",
     "count": 3
+  },
+  {
+    "question": "usb price",
+    "count": 4
   }
 ]
